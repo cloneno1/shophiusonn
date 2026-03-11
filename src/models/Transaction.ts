@@ -2,10 +2,13 @@ import mongoose from 'mongoose';
 
 const TransactionSchema = new mongoose.Schema({
   username: { type: String, required: true },
-  requestId: { type: String, required: true, unique: true },
-  telco: { type: String, required: true },
   amount: { type: Number, required: true },
-  status: { type: Number, default: 0 }, // 0: Pending, 1: Success, 2: Failed, 3: Wrong Amount
+  method: { type: String, required: true }, // 'card' or 'bank'
+  telco: { type: String }, // For card
+  serial: { type: String }, // For card
+  code: { type: String }, // For card
+  requestId: { type: String }, // For card API tracking
+  status: { type: String, default: 'Pending' }, // Pending, Success, Failed
   createdAt: { type: Date, default: Date.now },
 });
 

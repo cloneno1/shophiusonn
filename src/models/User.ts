@@ -13,6 +13,7 @@ const UserSchema: Schema = new Schema({
   password: { type: String, required: true },
   balance: { type: Number, default: 0 },
   role: { type: String, default: 'user' },
+  status: { type: String, default: 'active' }, // active, blocked
   createdAt: { type: Date, default: Date.now },
 });
 
