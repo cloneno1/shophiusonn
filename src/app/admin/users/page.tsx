@@ -46,6 +46,24 @@ export default function UsersManagement() {
     }
   };
 
+  const handleToggleRole = async (id: string, currentRole: string) => {
+    const newRole = currentRole === 'admin' ? 'user' : 'admin';
+    if (!confirm(`Bạn có chắc chắn muốn chuyển tài khoản này sang quyền ${newRole.toUpperCase()}?`)) return;
+
+    try {
+      const res = await fetch(`/api/admin/users/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: newRole }),
+      });
+      if (res.ok) {
+        setUsers(users.map(u => u._id === id ? { ...u, role: newRole } : u));
+      }
+    } catch (err) {
+      alert('Lỗi cập nhật quyền hạn');
+    }
+  };
+
   const handleToggleStatus = async (id: string, currentStatus: string) => {
     const newStatus = currentStatus === 'active' ? 'blocked' : 'active';
     if (!confirm(`Bạn có chắc chắn muốn ${newStatus === 'blocked' ? 'Khóa' : 'Mở khóa'} tài khoản này?`)) return;
@@ -109,6 +127,13 @@ export default function UsersManagement() {
                         onClick={() => handleEditBalance(user._id, user.balance)}
                       >
                         Sửa
+                      </button>
+                      <button 
+                        className={`${styles.actionBtn}`}
+                        style={{ backgroundColor: '#6366f1' }}
+                        onClick={() => handleToggleRole(user._id, user.role)}
+                      >
+                        Quyền
                       </button>
                       <button 
                         className={`${styles.actionBtn} ${styles.deleteBtn}`}
