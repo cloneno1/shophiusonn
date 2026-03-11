@@ -1,0 +1,117 @@
+.premiumContainer {
+  padding: var(--space-2xl) var(--space-md);
+  min-height: calc(100vh - 80px - 300px);
+}
+
+.premiumHeader {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.premiumIcon {
+  font-size: 4rem;
+  margin-bottom: var(--space-sm);
+  filter: drop-shadow(0 0 20px var(--color-warning));
+}
+
+.premiumTitle {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-sm);
+}
+
+.premiumDesc {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-xl);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.planCard {
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-bounce), box-shadow var(--transition-bounce);
+}
+
+.planCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  border-color: rgba(255, 207, 51, 0.5);
+}
+
+.planBadge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--color-warning);
+  color: #000;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-bottom-left-radius: var(--radius-lg);
+  font-size: 0.9rem;
+}
+
+.planRobux {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-xs);
+}
+
+.perMonth {
+  font-size: 1.2rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.planPrice {
+  font-size: 1.5rem;
+  color: var(--color-text-main);
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+}
+
+.planDesc {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xl);
+  flex-grow: 1;
+}
+
+.planForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: auto;
+}
+
+.inputField {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-main);
+  font-family: inherit;
+  transition: all var(--transition-fast);
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: var(--color-warning);
+  box-shadow: 0 0 0 2px rgba(255, 207, 51, 0.2);
+}
+
+/* Utils used in this component */
+:global(.w-full) {
+  width: 100%;
+}

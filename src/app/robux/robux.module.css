@@ -1,0 +1,220 @@
+.productContainer {
+  padding: var(--space-2xl) var(--space-md);
+  min-height: calc(100vh - 80px - 300px);
+}
+
+.productHeader {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.productTitle {
+  font-size: 2.8rem;
+  margin-bottom: var(--space-sm);
+  color: var(--color-primary);
+  font-weight: 800;
+}
+
+.productDesc {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: var(--space-2xl);
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  margin-bottom: var(--space-md);
+}
+
+.packagesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-md);
+}
+
+.packageCard {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.radioInput {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.cardContent {
+  padding: var(--space-md);
+  text-align: center;
+  border-radius: var(--radius-lg);
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+}
+
+.packageCard:hover .cardContent {
+  border-color: rgba(242, 29, 68, 0.4);
+  background-color: rgba(242, 29, 68, 0.05);
+}
+
+.radioInput:checked ~ .cardContent,
+.activePackage .cardContent {
+  border-color: var(--color-primary);
+  background-color: rgba(242, 29, 68, 0.05);
+  box-shadow: 0 0 15px rgba(242, 29, 68, 0.15);
+}
+
+.customRobuxInput {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-main);
+  transition: all var(--transition-fast);
+}
+
+.customRobuxInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(242, 29, 68, 0.1);
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(242, 29, 68, 0.1);
+}
+
+.robuxAmount {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: var(--space-xs);
+}
+
+.robuxPrice {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+/* Checkout Section */
+.checkoutCard {
+  padding: var(--space-xl);
+  position: sticky;
+  top: 100px;
+}
+
+.checkoutCard h3 {
+  font-size: 1.4rem;
+  margin-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-sm);
+}
+
+.orderForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.formGroup label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-main);
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-main);
+  font-family: inherit;
+  transition: all var(--transition-fast);
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(242, 29, 68, 0.1);
+}
+
+.summary {
+  margin-top: var(--space-md);
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border: 1px solid var(--color-border);
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+.highlight {
+  color: var(--color-secondary);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.highlightPrice {
+  color: var(--color-primary);
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+
+.buyBtn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.1rem;
+  margin-top: var(--space-sm);
+}
+
+.trustBadges {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-lg);
+  font-size: 0.85rem;
+  color: var(--color-success);
+  opacity: 0.8;
+}
+
+.instructionImg {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  margin-top: var(--space-md);
+}
+
+@media (max-width: 900px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .checkoutCard {
+    position: static;
+  }
+}

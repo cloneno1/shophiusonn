@@ -1,0 +1,104 @@
+.rechargeCard {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+}
+
+.title {
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: var(--space-xs);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xl);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.formGroup label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-main);
+}
+
+.formGroup input, .formGroup select {
+  width: 100%;
+  padding: 12px;
+  background-color: #1a1a24;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-family: inherit;
+}
+
+.formGroup input:focus, .formGroup select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.alert {
+  padding: 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.alertSuccess {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.alertError {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.note {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.note ul {
+  padding-left: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.note li {
+  margin-bottom: 0.2rem;
+}
+
+@media (max-width: 480px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
