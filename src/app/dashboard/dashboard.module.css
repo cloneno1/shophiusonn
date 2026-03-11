@@ -139,6 +139,8 @@
   border-radius: var(--radius-full);
   font-size: 0.8rem;
   font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .statusSuccess {
