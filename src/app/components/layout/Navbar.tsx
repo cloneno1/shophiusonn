@@ -38,7 +38,7 @@ export default function Navbar() {
           <Link href="/premium" className={styles.navLink}>Thuê Premium</Link>
           <Link href="/recharge" className={styles.navLink}>Nạp Tiền</Link>
           
-          <div className={`${styles.navLink} ${styles.dropdown}`} style={{ color: 'var(--color-primary)' }}>
+          <div className={`${styles.navLink} ${styles.dropdown}`}>
             Liên Kết <span style={{ fontSize: '0.7rem' }}>▼</span>
             <div className={styles.dropdownContent}>
               <a href={links.linkFacebook} target="_blank" rel="noreferrer" className={styles.dropdownItem}>Page Facebook</a>

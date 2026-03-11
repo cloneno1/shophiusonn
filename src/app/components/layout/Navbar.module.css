@@ -61,18 +61,10 @@
   position: relative;
   display: inline-block;
   cursor: pointer;
-  color: var(--color-primary);
-  font-weight: 700;
 }
 
-.dropdown::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  bottom: -4px;
-  left: 0;
-  background-color: var(--color-primary);
+.dropdown:hover {
+  color: var(--color-primary);
 }
 
 .dropdownContent {
@@ -87,13 +79,25 @@
   padding: 0.8rem;
   z-index: 1000;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
-  margin-top: 12px;
+  padding-top: 0.8rem;
+}
+
+/* Cầu nối để không bị mất hover khi di chuyển chuột xuống menu */
+.dropdownContent::before {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: transparent;
 }
 
 .dropdown:hover .dropdownContent {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-top: 10px; /* Thêm lại khoảng cách nhưng có cầu nối ::before che đi */
 }
 
 .dropdownItem {
