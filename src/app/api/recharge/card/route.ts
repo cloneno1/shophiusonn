@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
     const sign = crypto
       .createHash('md5')
-      .update(partnerKey + code + serial)
+      .update((partnerKey || '') + code + serial)
       .digest('hex');
 
     const response = await axios.get('https://thesieure.com/chargingws/v2', {

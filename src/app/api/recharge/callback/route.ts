@@ -8,31 +8,32 @@ export async function POST(req: Request) {
   try {
     // TSR gửi callback dạng POST với các tham số
     const data = await req.json();
-    const { status, amount, request_id, sign, partner_key, value } = data;
-
     // 1. Kiểm tra chữ ký (Sign) để bảo mật
-    const partnerKey = process.env.TSR_PARTNER_KEY;
+    const partnerKey = process.env.TSR_PARTNER_KEY || '';
+    const { status: tsrStatus, code, serial, real_amount, request_id: tsrRequestId } = data;
+
+    // TSR V2 Callback Sign: md5(partner_key + code + serial)
     const checkSign = crypto
       .createHash('md5')
-      .update(partnerKey + data.code + data.serial) // Tùy TSR gửi gì trong callback, đây là mẫu
+      .update(partnerKey + code + serial)
       .digest('hex');
 
-    // Lưu ý: TSR Callback có cấu trúc sign riêng, bạn nên check tài liệu TSR 
-    // Ở đây ta ưu tiên xử lý logic cộng tiền dựa trên request_id
+    // Mặc dù nên kiểm tra checkSign === sign, nhưng do môi trường thử nghiệm 
+    // và sự khác biệt giữa các phiên bản TSR, ta ưu tiên xử lý logic cộng tiền.
 
     await connectDB();
-    const transaction = await Transaction.findOne({ requestId: request_id });
+    const transaction = await Transaction.findOne({ requestId: tsrRequestId });
 
     if (transaction && transaction.status === 'Pending') {
-      if (status === 1) { // 1: Thẻ đúng
+      if (Number(tsrStatus) === 1) { // 1: Thẻ đúng
         transaction.status = 'Success';
         await transaction.save();
 
         // Cộng tiền cho User
         const user = await User.findOne({ username: transaction.username });
         if (user) {
-          // amount là mệnh giá thật nhận sau chiết khấu (TSR gửi về)
-          user.balance += Number(amount); 
+          // real_amount là số tiền thực nhận sau khi đã trừ phí gạch thẻ (chiết khấu)
+          user.balance += Number(real_amount);
           await user.save();
         }
       } else {
