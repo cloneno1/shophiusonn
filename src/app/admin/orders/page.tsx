@@ -21,6 +21,7 @@ interface Order {
 export default function OrdersManagement() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
     fetchOrders();
@@ -89,7 +90,14 @@ export default function OrdersManagement() {
                     <td>
                       <div style={{ fontSize: '0.8rem' }}>
                         {order.details.gamepassUrl && <a href={order.details.gamepassUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--primary-color)', display: 'block' }}>Link Gamepass</a>}
-                        {order.details.image && <a href={order.details.image} target="_blank" rel="noreferrer" style={{ color: '#3b82f6', display: 'block' }}>Xem ảnh đính kèm</a>}
+                        {order.details.image && (
+                          <button 
+                            onClick={() => setSelectedImage(order.details.image!)}
+                            style={{ color: '#3b82f6', display: 'block', background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontSize: '0.8rem', textDecoration: 'underline' }}
+                          >
+                            Xem ảnh đính kèm
+                          </button>
+                        )}
                         {order.details.note && <p>Ghi chú: {order.details.note}</p>}
                       </div>
                     </td>
@@ -120,6 +128,49 @@ export default function OrdersManagement() {
           </div>
         )}
       </div>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '2rem'
+          }}
+          onClick={() => setSelectedImage(null)}
+        >
+          <div style={{ position: 'relative', maxWidth: '100%', maxHeight: '100%' }}>
+            <img 
+              src={selectedImage} 
+              alt="Attached content" 
+              style={{ maxWidth: '100%', maxHeight: '90vh', borderRadius: '8px', border: '2px solid rgba(255,255,255,0.1)' }} 
+            />
+            <button 
+              onClick={() => setSelectedImage(null)}
+              style={{
+                position: 'absolute',
+                top: '-40px',
+                right: '0',
+                color: '#fff',
+                fontSize: '1.5rem',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              ✕ Đóng
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
