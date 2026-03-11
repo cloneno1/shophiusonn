@@ -21,7 +21,7 @@ export default function RobuxPage({ params }: { params: Promise<{ type: string }
   const isGroup = type === 'group';
   const title = isGroup ? 'Mua Robux Group (Tức Thì)' : 'Mua Robux Gamepass (120H)';
   const description = isGroup
-    ? 'Hệ thống tự động chuyển Robux vào tài khoản qua Group 14 ngày. An toàn 100%, có ngay sau 1s.'
+    ? 'Đây là robux không có thuế, bạn mua bao nhiêu thì sẽ vào acc bạn bấy nhiêu. Hệ thống tự động chuyển Robux vào tài khoản qua Group 14 ngày. An toàn 100%, có ngay sau 1s.'
     : 'Nạp Robux thông qua Gamepass, đợi 120H (5 ngày) để Robux về tài khoản. Giá cực siêu rẻ.';
 
   useEffect(() => {
