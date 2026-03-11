@@ -80,7 +80,7 @@ export default function Home() {
             </div>
             <p className={styles.cardDesc}>Nâng cấp Premium hàng tháng giá rẻ nhận Robux mỗi tháng.</p>
             <div className={styles.cardAction}>
-              <Link href="/premium" className="btn btn-secondary">Mua Ngay</Link>
+              <button className="btn btn-secondary" disabled style={{ opacity: 0.6, cursor: 'not-allowed' }}>Chưa hoạt động</button>
             </div>
           </div>
         </div>
