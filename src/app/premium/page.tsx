@@ -21,23 +21,17 @@ export default function PremiumPage() {
         </p>
       </div>
 
-      <div className={styles.plansGrid}>
-        {plans.map((plan) => (
-          <div key={plan.id} className={`${styles.planCard} glass-panel`}>
-            <div className={styles.planBadge}>{plan.name}</div>
-            <h2 className={styles.planRobux}>
-              <span className="text-gradient">{plan.robux}</span> R$
-              <span className={styles.perMonth}>/ tháng</span>
-            </h2>
-            <div className={styles.planPrice}>{plan.price.toLocaleString('vi-VN')} đ</div>
-            <p className={styles.planDesc}>{plan.desc}</p>
-            <form className={styles.planForm}>
-               <input type="text" placeholder="Tên nhân vật Roblox..." required className={styles.inputField} />
-               <input type="password" placeholder="Mật khẩu Roblox (Yêu cầu để nâng cấp)..." required className={styles.inputField} />
-               <button type="submit" className="btn btn-primary w-full">Đăng Ký Gói</button>
-            </form>
-          </div>
-        ))}
+      <div className="glass-panel" style={{ padding: '4rem 2rem', textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
+        <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem', fontFamily: 'var(--font-outfit)' }}>Dịch Vụ Hiện Đang Bảo Trì</h2>
+        <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem', marginBottom: '2rem' }}>
+          Hiện tại tính năng nâng cấp Roblox Premium đang tạm đóng để cập nhật hệ thống. Quý khách vui lòng quay lại sau.
+        </p>
+        <div style={{ display: 'inline-block', padding: '1rem 2.5rem', borderRadius: '50px', backgroundColor: 'rgba(255,255,255,0.05)', color: 'var(--color-warning)', fontWeight: '600', border: '1px solid rgba(255,122,0,0.3)' }}>
+          ⚠️ Trạng thái: Chưa hoạt động
+        </div>
+        <div style={{ marginTop: '2rem' }}>
+          <Link href="/" className="btn btn-primary">Quay lại trang chủ</Link>
+        </div>
       </div>
 
       <div style={{ maxWidth: '800px', margin: '3rem auto 0' }}>
