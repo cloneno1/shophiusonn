@@ -9,6 +9,7 @@ const OrderSchema = new mongoose.Schema({
   cost: { type: Number, default: 0 }, // VND amount (Cost of goods)
   commissionPaid: { type: Boolean, default: false },
   status: { type: String, default: 'Pending' }, // Pending, Processing, Completed, Cancelled
+  adminNote: { type: String }, // To display feedback to the user
   details: { 
     gamepassUrl: String,
     image: String,

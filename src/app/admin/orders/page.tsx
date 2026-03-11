@@ -10,6 +10,8 @@ interface Order {
   amount: number;
   price: number;
   status: string;
+  adminNote?: string;
+  _originalAdminNote?: string;
   details: {
     gamepassUrl?: string;
     image?: string;
@@ -32,7 +34,7 @@ export default function OrdersManagement() {
       const res = await fetch('/api/admin/orders');
       const data = await res.json();
       if (Array.isArray(data)) {
-        setOrders(data);
+        setOrders(data.map((order: any) => ({ ...order, _originalAdminNote: order.adminNote })));
       }
     } catch (err) {
       console.error(err);
@@ -41,15 +43,15 @@ export default function OrdersManagement() {
     }
   };
 
-  const handleUpdateStatus = async (id: string, newStatus: string) => {
+  const handleUpdate = async (id: string, newStatus: string, adminNote?: string) => {
     try {
       const res = await fetch(`/api/admin/orders/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ status: newStatus, adminNote }),
       });
       if (res.ok) {
-        setOrders(orders.map(o => o._id === id ? { ...o, status: newStatus } : o));
+        setOrders(orders.map(o => o._id === id ? { ...o, status: newStatus, adminNote, _originalAdminNote: adminNote } : o));
       }
     } catch (err) {
       alert('Lỗi cập nhật trạng thái đơn hàng');
@@ -112,7 +114,7 @@ export default function OrdersManagement() {
                     <td>
                       <select 
                         value={order.status} 
-                        onChange={(e) => handleUpdateStatus(order._id, e.target.value)}
+                        onChange={(e) => handleUpdate(order._id, e.target.value, order.adminNote)}
                         style={{ padding: '0.3rem', borderRadius: '4px', backgroundColor: '#1a1a24', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }}
                       >
                         <option value="Pending">Chờ</option>
@@ -120,6 +122,30 @@ export default function OrdersManagement() {
                         <option value="Completed">Xong</option>
                         <option value="Cancelled">Hủy</option>
                       </select>
+                      <div style={{ marginTop: '0.5rem' }}>
+                        <input 
+                          type="text"
+                          placeholder="Nhập ghi chú (nếu có)"
+                          value={order.adminNote || ''}
+                          onChange={(e) => {
+                            setOrders(orders.map(o => o._id === order._id ? { ...o, adminNote: e.target.value } : o));
+                          }}
+                          onBlur={(e) => {
+                            if (e.target.value !== (orders.find(o => o._id === order._id)?._originalAdminNote)) {
+                               handleUpdate(order._id, order.status, e.target.value);
+                            }
+                          }}
+                          style={{
+                            width: '100%',
+                            padding: '0.4rem',
+                            borderRadius: '4px',
+                            backgroundColor: '#1a1a24',
+                            color: '#fff',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            fontSize: '0.8rem'
+                          }}
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))}

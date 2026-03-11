@@ -13,6 +13,7 @@ interface Transaction {
   amount: string;
   price: string;
   status: string;
+  adminNote?: string;
 }
 
 export default function DashboardPage() {
@@ -156,6 +157,7 @@ export default function DashboardPage() {
                     <th>Số Lượng</th>
                     <th>Thanh Toán</th>
                     <th>Trạng Thái</th>
+                    <th>Ghi Chú</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -170,6 +172,9 @@ export default function DashboardPage() {
                         <span className={`${styles.statusBadge} ${tx.status === 'Hoàn Thành' ? styles.statusSuccess : tx.status === 'Thất Bại' ? styles.statusFailed : styles.statusPending}`}>
                           {tx.status}
                         </span>
+                      </td>
+                      <td style={{ maxWidth: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--color-danger)' }}>
+                        {tx.adminNote || '-'}
                       </td>
                     </tr>
                   ))}

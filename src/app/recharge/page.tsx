@@ -134,7 +134,7 @@ export default function RechargePage() {
 
         {/* Cột 2: Chuyển khoản ngân hàng */}
         <div className={`${styles.rechargeCard} glass-panel animate-fade-in`} style={{ margin: 0, maxWidth: '100%' }}>
-          <h2 className={styles.title}>Chuyển Khoản / Ví Điện Tử</h2>
+          <h2 className={styles.title}>Chuyển Khoản / Ví Điện Tử <span style={{ color: 'var(--color-success)', fontSize: '0.9rem', verticalAlign: 'middle' }}>(+5% TIỀN)</span></h2>
           <p className={styles.subtitle}>Sẽ được Admin xử lý nhanh chóng sau khi chuyển khoản</p>
 
           <div className={styles.bankInfo}>

@@ -28,19 +28,21 @@ export async function GET() {
     const allTransactions = [
       ...cardTransactions.map((tx: any) => ({
         id: tx.requestId || tx._id.toString(),
-        date: new Date(tx.createdAt).toLocaleDateString('vi-VN'),
+        date: new Date(tx.createdAt).toLocaleString('vi-VN', { hour12: false }), // Include time
         service: `Nạp Thẻ ${tx.telco}`,
         amount: `${tx.amount.toLocaleString()} đ`,
         price: `${tx.amount.toLocaleString()} VNĐ`,
-        status: tx.status === 1 ? 'Hoàn Thành' : tx.status === 2 ? 'Thất Bại' : 'Đang Xử Lý'
+        status: tx.status === 'Success' ? 'Hoàn Thành' : tx.status === 'Failed' ? 'Thất Bại' : 'Đang Xử Lý', // Map proper text statuses
+        adminNote: tx.adminNote || '' // Admin feedback
       })),
       ...robuxOrders.map((order: any) => ({
         id: order._id.toString().substring(0, 8).toUpperCase(),
-        date: new Date(order.createdAt).toLocaleDateString('vi-VN'),
+        date: new Date(order.createdAt).toLocaleString('vi-VN', { hour12: false }), // Include time
         service: order.type === 'gamepass' ? 'Robux Gamepass' : order.type === 'group' ? 'Robux Group' : 'Robux Premium',
         amount: `${order.amount.toLocaleString()} R$`,
         price: `${order.price.toLocaleString()} VNĐ`,
-        status: order.status === 'Completed' ? 'Hoàn Thành' : order.status === 'Cancelled' ? 'Bị Hủy' : 'Đang Xử Lý'
+        status: order.status === 'Completed' ? 'Hoàn Thành' : order.status === 'Cancelled' ? 'Thất Bại' : 'Đang Xử Lý', // Use consistent status string including 'Thất bại' where needed if wanted
+        adminNote: order.adminNote || '' // Admin feedback
       }))
     ];
 

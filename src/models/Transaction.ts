@@ -9,6 +9,7 @@ const TransactionSchema = new mongoose.Schema({
   code: { type: String }, // For card
   requestId: { type: String }, // For card API tracking
   status: { type: String, default: 'Pending' }, // Pending, Success, Failed
+  adminNote: { type: String }, // To display feedback to the user
   createdAt: { type: Date, default: Date.now },
 });
 

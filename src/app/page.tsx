@@ -2,9 +2,15 @@ import Link from 'next/link';
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import styles from './page.module.css';
+import connectDB from '@/lib/mongodb';
+import SiteConfig from '@/models/SiteConfig';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
+  
+  await connectDB();
+  const videoConfig = await SiteConfig.findOne({ key: 'videoTutorial' });
+  const videoId = videoConfig?.value || '';
 
   return (
     <div className={styles.main}>
@@ -32,6 +38,22 @@ export default async function Home() {
               </Link>
             )}
           </div>
+
+          {/* Video Section */}
+          {videoId && (
+            <div className={`${styles.videoWrapper} animate-fade-in`} style={{ animationDelay: '0.5s', maxWidth: '700px', margin: '2rem auto', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}>
+               <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
+                 <iframe 
+                   style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                   src={`https://www.youtube.com/embed/${videoId}`}
+                   title="Hướng dẫn mua hàng"
+                   frameBorder="0"
+                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                   allowFullScreen
+                 ></iframe>
+               </div>
+            </div>
+          )}
           
           <div className={`${styles.statsGrid} animate-fade-in`} style={{ animationDelay: '0.6s' }}>
             <div className={`${styles.statCard} glass-panel`}>

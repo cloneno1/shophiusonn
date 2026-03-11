@@ -22,6 +22,7 @@ export async function GET() {
       linkFacebook: 'https://facebook.com',
       linkDiscord: 'https://discord.gg',
       linkYoutube: 'https://youtube.com',
+      videoTutorial: '',
     };
 
     return NextResponse.json({ ...defaultConfig, ...configMap });

@@ -15,6 +15,7 @@ export default function SettingsManagement() {
     linkFacebook: '',
     linkDiscord: '',
     linkYoutube: '',
+    videoTutorial: '',
     maintenance: false,
   });
   const [loading, setLoading] = useState(true);
@@ -168,6 +169,10 @@ export default function SettingsManagement() {
               <div className={styles.formGroup}>
                 <label style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Link Youtube</label>
                 <input type="text" name="linkYoutube" value={config.linkYoutube} onChange={handleChange} style={{ width: '100%', padding: '10px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} />
+              </div>
+              <div className={styles.formGroup}>
+                <label style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>ID Video hướng dẫn (Youtube)</label>
+                <input type="text" name="videoTutorial" placeholder="Ví dụ: dQw4w9WgXcQ (Chỉ lấy mã ID cuối link)" value={config.videoTutorial} onChange={handleChange} style={{ width: '100%', padding: '10px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} />
               </div>
             </div>
           </div>

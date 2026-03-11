@@ -17,7 +17,7 @@ export async function PATCH(
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const { status } = await req.json();
+    const { status, adminNote } = await req.json();
 
     await connectDB();
     const order = await Order.findById(id);
@@ -25,7 +25,8 @@ export async function PATCH(
       return NextResponse.json({ message: 'Order not found' }, { status: 404 });
     }
 
-    order.status = status;
+    if (status) order.status = status;
+    if (adminNote !== undefined) order.adminNote = adminNote;
     await order.save();
 
     // Xử lý hoa hồng Affiliate nếu đơn hàng hoàn tất
