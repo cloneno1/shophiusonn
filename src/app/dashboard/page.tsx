@@ -22,6 +22,7 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<'transactions' | 'password'>('transactions');
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userBalance, setUserBalance] = useState<number | null>(null);
   
   // Password form states
   const [oldPassword, setOldPassword] = useState('');
@@ -35,10 +36,23 @@ export default function DashboardPage() {
       router.push('/login');
     }
     
-    if (status === 'authenticated' && activeTab === 'transactions') {
-      fetchTransactions();
+    if (status === 'authenticated') {
+      if (activeTab === 'transactions') fetchTransactions();
+      fetchBalance();
     }
   }, [status, router, activeTab]);
+
+  const fetchBalance = async () => {
+    try {
+      const res = await fetch('/api/user/profile');
+      if (res.ok) {
+        const data = await res.json();
+        setUserBalance(data.balance);
+      }
+    } catch (error) {
+      console.error('Failed to fetch balance:', error);
+    }
+  };
 
   const fetchTransactions = async () => {
     setLoading(true);
@@ -101,7 +115,7 @@ export default function DashboardPage() {
           <div className={styles.avatar}>{session.user?.name?.[0].toUpperCase() || 'U'}</div>
           <div>
             <h3>{session.user?.name}</h3>
-            <p className={styles.userBalance}>Số dư: <span className="text-gradient font-bold">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(session.user?.balance || 0)}</span></p>
+            <p className={styles.userBalance}>Số dư: <span className="text-gradient font-bold">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(userBalance ?? session.user?.balance ?? 0)}</span></p>
           </div>
         </div>
         <nav className={styles.sideNav}>
