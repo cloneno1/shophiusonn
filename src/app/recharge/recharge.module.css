@@ -118,11 +118,12 @@
 }
 
 .bankInfo {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.05);
   padding: 1.5rem;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   margin-top: 1rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .bankItem {
@@ -137,9 +138,10 @@
 }
 
 .bankValue {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--color-primary);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(242, 29, 68, 0.3);
   font-family: var(--font-outfit);
 }
 
