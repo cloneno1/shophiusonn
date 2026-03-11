@@ -77,6 +77,7 @@ export default function OrdersManagement() {
                   <th>Dịch vụ</th>
                   <th>Số lượng</th>
                   <th>Giá</th>
+                  <th>Thời gian</th>
                   <th>Chi tiết</th>
                   <th>Trạng thái</th>
                   <th>Hành động</th>
@@ -89,6 +90,7 @@ export default function OrdersManagement() {
                     <td style={{ textTransform: 'capitalize' }}>{order.type}</td>
                     <td>{order.amount.toLocaleString()} R$</td>
                     <td>{order.price.toLocaleString()}đ</td>
+                    <td style={{ fontSize: '0.85rem' }}>{new Date(order.createdAt).toLocaleString('vi-VN')}</td>
                     <td>
                       <div style={{ fontSize: '0.8rem' }}>
                         {order.details.gamepassUrl && <a href={order.details.gamepassUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--primary-color)', display: 'block' }}>Link Gamepass</a>}
