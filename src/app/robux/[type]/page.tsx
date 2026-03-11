@@ -104,9 +104,6 @@ export default function RobuxPage({ params }: { params: Promise<{ type: string }
             ))}
           </div>
 
-          <div style={{ marginTop: '2rem' }}>
-            <RecentActivity />
-          </div>
         </div>
 
         {/* Right Col: Checkout / Input */}
@@ -183,6 +180,10 @@ export default function RobuxPage({ params }: { params: Promise<{ type: string }
             </div>
           </div>
         </div>
+      </div>
+      
+      <div style={{ marginTop: '3rem' }}>
+        <RecentActivity />
       </div>
     </div>
   );
