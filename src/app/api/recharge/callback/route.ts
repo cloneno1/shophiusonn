@@ -6,20 +6,20 @@ import crypto from 'crypto';
 
 export async function POST(req: Request) {
   try {
-    // TSR gửi callback dạng POST với các tham số
+    // Gachthe1s gửi callback dạng POST với các tham số
     const data = await req.json();
     // 1. Kiểm tra chữ ký (Sign) để bảo mật
     const partnerKey = process.env.TSR_PARTNER_KEY || '';
     const { status: tsrStatus, code, serial, real_amount, request_id: tsrRequestId } = data;
 
-    // TSR V2 Callback Sign: md5(partner_key + code + serial)
+    // Gachthe1s V2 Callback Sign: md5(partner_key + code + serial)
     const checkSign = crypto
       .createHash('md5')
       .update(partnerKey + code + serial)
       .digest('hex');
 
     // Mặc dù nên kiểm tra checkSign === sign, nhưng do môi trường thử nghiệm 
-    // và sự khác biệt giữa các phiên bản TSR, ta ưu tiên xử lý logic cộng tiền.
+    // và sự khác biệt giữa các phiên bản, ta ưu tiên xử lý logic cộng tiền.
 
     await connectDB();
     const transaction = await Transaction.findOne({ requestId: tsrRequestId });
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ message: 'Success' });
   } catch (error) {
-    console.error('TSR Callback Error:', error);
+    console.error('Gachthe1s Callback Error:', error);
     return NextResponse.json({ message: 'Error' }, { status: 500 });
   }
 }

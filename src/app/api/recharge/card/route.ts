@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       .update((partnerKey || '') + code + serial)
       .digest('hex');
 
-    const response = await axios.get('https://thesieure.com/chargingws/v2', {
+    const response = await axios.get('https://gachthe1s.com/chargingws/v2', {
       params: {
         telco,
         code,
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(response.data);
   } catch (error) {
-    console.error('TSR Card Error:', error);
+    console.error('Gachthe1s Card Error:', error);
     return NextResponse.json({ message: 'Lỗi gửi thẻ' }, { status: 500 });
   }
 }
