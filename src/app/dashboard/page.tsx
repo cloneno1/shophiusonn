@@ -173,7 +173,7 @@ export default function DashboardPage() {
                           {tx.status}
                         </span>
                       </td>
-                      <td style={{ maxWidth: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--color-danger)' }}>
+                      <td style={{ color: 'var(--color-danger)', fontSize: '0.85rem' }}>
                         {tx.adminNote || '-'}
                       </td>
                     </tr>
