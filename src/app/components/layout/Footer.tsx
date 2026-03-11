@@ -7,7 +7,7 @@ export default function Footer() {
       <div className={`container ${styles.footerGrid}`}>
         <div className={styles.brandSection}>
           <Link href="/" className={styles.logo}>
-            Robux<span className="text-gradient">Việt</span>
+            Shop<span className="text-gradient">Hiusonn</span>
           </Link>
           <p className={styles.description}>
             Hệ thống bán Robux uy tín, tự động và an toàn nhất Việt Nam. Được hàng ngàn game thủ tin dùng mỗi ngày.
@@ -31,7 +31,7 @@ export default function Footer() {
         </div>
       </div>
       <div className={styles.bottomBar}>
-        <p>&copy; {new Date().getFullYear()} Shop Robux Việt. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Shophiusonn. All rights reserved.</p>
       </div>
     </footer>
   );

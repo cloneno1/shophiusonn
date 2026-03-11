@@ -102,3 +102,54 @@
     grid-template-columns: 1fr;
   }
 }
+
+.rechargeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 992px) {
+  .rechargeGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bankInfo {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 1rem;
+}
+
+.bankItem {
+  margin-bottom: 1rem;
+}
+
+.bankLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.bankValue {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  font-family: var(--font-outfit);
+}
+
+.qrContainer {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.qrImage {
+  max-width: 250px;
+  border-radius: 12px;
+  border: 2px solid var(--color-primary);
+}

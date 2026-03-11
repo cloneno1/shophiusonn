@@ -22,7 +22,8 @@ export const authOptions: NextAuthOptions = {
           return { 
             id: user._id.toString(), 
             name: user.username, 
-            balance: user.balance 
+            balance: user.balance,
+            role: user.role
           };
         }
         return null;
@@ -34,6 +35,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.balance = user.balance;
+        token.role = user.role;
       }
       if (trigger === "update" && session?.balance !== undefined) {
         token.balance = session.balance;
@@ -43,6 +45,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.balance = token.balance;
+      session.user.role = token.role;
       return session;
     }
   },

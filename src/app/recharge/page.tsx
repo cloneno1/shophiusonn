@@ -52,80 +52,124 @@ export default function RechargePage() {
 
   return (
     <div className="container" style={{ padding: '2rem 1rem' }}>
-      <div className={`${styles.rechargeCard} glass-panel animate-fade-in`}>
-        <h2 className={styles.title}>Nạp Thẻ Cào Tự Động</h2>
-        <p className={styles.subtitle}>Chiết khấu cực thấp, duyệt thẻ nhanh trong 30 giây</p>
+      <div className={styles.rechargeGrid}>
+        {/* Cột 1: Nạp thẻ cào */}
+        <div className={`${styles.rechargeCard} glass-panel animate-fade-in`} style={{ margin: 0, maxWidth: '100%' }}>
+          <h2 className={styles.title}>Nạp Thẻ Cào Tự Động</h2>
+          <p className={styles.subtitle}>Chiết khấu cực thấp, duyệt thẻ nhanh trong 30 giây</p>
 
-        {message.text && (
-          <div className={`${styles.alert} ${message.type === 'success' ? styles.alertSuccess : styles.alertError}`}>
-            {message.text}
-          </div>
-        )}
-
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <div className={styles.formGrid}>
-            <div className={styles.formGroup}>
-              <label>Loại thẻ</label>
-              <select 
-                value={formData.telco}
-                onChange={(e) => setFormData({...formData, telco: e.target.value})}
-              >
-                <option value="VIETTEL">Viettel</option>
-                <option value="VINAPHONE">Vinaphone</option>
-                <option value="MOBIFONE">Mobifone</option>
-                <option value="ZING">Zing</option>
-              </select>
+          {message.text && (
+            <div className={`${styles.alert} ${message.type === 'success' ? styles.alertSuccess : styles.alertError}`}>
+              {message.text}
             </div>
+          )}
+
+          <form className={styles.form} onSubmit={handleSubmit}>
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label>Loại thẻ</label>
+                <select 
+                  value={formData.telco}
+                  onChange={(e) => setFormData({...formData, telco: e.target.value})}
+                >
+                  <option value="VIETTEL">Viettel</option>
+                  <option value="VINAPHONE">Vinaphone</option>
+                  <option value="MOBIFONE">Mobifone</option>
+                  <option value="ZING">Zing</option>
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label>Mệnh giá</label>
+                <select
+                  value={formData.amount}
+                  onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                >
+                  <option value="10000">10,000 VNĐ</option>
+                  <option value="20000">20,000 VNĐ</option>
+                  <option value="50000">50,000 VNĐ</option>
+                  <option value="100000">100,000 VNĐ</option>
+                  <option value="200000">200,000 VNĐ</option>
+                  <option value="500000">500,000 VNĐ</option>
+                </select>
+              </div>
+            </div>
+
             <div className={styles.formGroup}>
-              <label>Mệnh giá</label>
-              <select
-                value={formData.amount}
-                onChange={(e) => setFormData({...formData, amount: e.target.value})}
-              >
-                <option value="10000">10,000 VNĐ</option>
-                <option value="20000">20,000 VNĐ</option>
-                <option value="50000">50,000 VNĐ</option>
-                <option value="100000">100,000 VNĐ</option>
-                <option value="200000">200,000 VNĐ</option>
-                <option value="500000">500,000 VNĐ</option>
-              </select>
+              <label>Số Seri</label>
+              <input 
+                type="text" 
+                placeholder="Nhập số seri in trên thẻ" 
+                required
+                value={formData.serial}
+                onChange={(e) => setFormData({...formData, serial: e.target.value})}
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Mã thẻ</label>
+              <input 
+                type="text" 
+                placeholder="Nhập mã cào sau lớp bạc" 
+                required
+                value={formData.code}
+                onChange={(e) => setFormData({...formData, code: e.target.value})}
+              />
+            </div>
+
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px' }} disabled={loading}>
+              {loading ? 'Đang gửi thẻ...' : 'Nạp Thẻ Ngay'}
+            </button>
+          </form>
+
+          <div className={styles.note}>
+            <p><strong>Lưu ý:</strong></p>
+            <ul>
+              <li>Chọn sai mệnh giá sẽ mất thẻ.</li>
+              <li>Thẻ cào đã nạp không thể xóa hay chỉnh sửa.</li>
+              <li>Nếu thẻ đúng, tiền sẽ được cộng vào tài khoản sau 1-3 phút.</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Cột 2: Chuyển khoản ngân hàng */}
+        <div className={`${styles.rechargeCard} glass-panel animate-fade-in`} style={{ margin: 0, maxWidth: '100%' }}>
+          <h2 className={styles.title}>Chuyển Khoản / Ví Điện Tử</h2>
+          <p className={styles.subtitle}>Cộng tiền tự động qua nội dung chuyển khoản</p>
+
+          <div className={styles.bankInfo}>
+            <div className={styles.bankItem}>
+              <span className={styles.bankLabel}>CHỦ TÀI KHOẢN</span>
+              <span className={styles.bankValue}>NGUYEN HIEU SON</span>
+            </div>
+            <div className={styles.bankItem}>
+              <span className={styles.bankLabel}>SỐ TÀI KHOẢN</span>
+              <span className={styles.bankValue}>0334445502</span>
+            </div>
+            <div className={styles.bankItem}>
+              <span className={styles.bankLabel}>NGÂN HÀNG</span>
+              <span className={styles.bankValue}>MB BANK (Ngân hàng Quân Đội)</span>
+            </div>
+            <div className={styles.bankItem}>
+              <span className={styles.bankLabel}>NỘI DUNG CHUYỂN KHOẢN</span>
+              <span className={styles.bankValue}>NAP {session?.user?.name || 'Username'}</span>
             </div>
           </div>
 
-          <div className={styles.formGroup}>
-            <label>Số Seri</label>
-            <input 
-              type="text" 
-              placeholder="Nhập số seri in trên thẻ" 
-              required
-              value={formData.serial}
-              onChange={(e) => setFormData({...formData, serial: e.target.value})}
-            />
+          <div className={styles.qrContainer}>
+            <img src="/qr-bank.png" alt="MB Bank QR Code" className={styles.qrImage} />
+            <p style={{ marginTop: '1rem', color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
+              Quét mã QR để tự động nhập thông tin và nội dung
+            </p>
           </div>
 
-          <div className={styles.formGroup}>
-            <label>Mã thẻ</label>
-            <input 
-              type="text" 
-              placeholder="Nhập mã cào sau lớp bạc" 
-              required
-              value={formData.code}
-              onChange={(e) => setFormData({...formData, code: e.target.value})}
-            />
+          <div className={styles.note}>
+            <p><strong>Lưu ý:</strong></p>
+            <ul>
+              <li>Vui lòng nhập đúng nội dung chuyển khoản.</li>
+              <li>Nạp tối thiểu 10,000 VNĐ.</li>
+              <li>Hệ thống cộng tiền tự động sau 30s - 1 phút.</li>
+            </ul>
           </div>
-
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px' }} disabled={loading}>
-            {loading ? 'Đang gửi thẻ...' : 'Nạp Thẻ Ngay'}
-          </button>
-        </form>
-
-        <div className={styles.note}>
-          <p><strong>Lưu ý:</strong></p>
-          <ul>
-            <li>Chọn sai mệnh giá sẽ mất thẻ.</li>
-            <li>Thẻ cào đã nạp không thể xóa hay chỉnh sửa.</li>
-            <li>Nếu thẻ đúng, tiền sẽ được cộng vào tài khoản sau 1-3 phút.</li>
-          </ul>
         </div>
       </div>
     </div>

@@ -17,12 +17,20 @@ export default function Navbar() {
           <Link href="/robux/gamepass" className={styles.navLink}>Mua Robux Gamepass</Link>
           <Link href="/robux/group" className={styles.navLink}>Mua Robux Group</Link>
           <Link href="/premium" className={styles.navLink}>Thuê Premium</Link>
+          <Link href="/recharge" className={styles.navLink}>Nạp Tiền</Link>
         </nav>
         <div className={styles.authActions}>
           {session ? (
-            <Link href="/dashboard" className="btn btn-secondary">
-              Hi, {session.user?.name}
-            </Link>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              {session.user?.role === 'admin' && (
+                <Link href="/admin" className="btn btn-primary" style={{ background: '#ef4444' }}>
+                  Admin
+                </Link>
+              )}
+              <Link href="/dashboard" className="btn btn-secondary">
+                Hi, {session.user?.name}
+              </Link>
+            </div>
           ) : (
             <>
               <Link href="/login" className="btn btn-secondary">Đăng Nhập</Link>

@@ -18,6 +18,9 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "Shop Hiusonn - Shop Robux Uy Tín",
   description: "Shop bán robux uy tín tự động, nạp thẻ liền tay nhận ngay robux. Dịch vụ Roblox hàng đầu Việt Nam.",
+  icons: {
+    icon: "/logo.png",
+  }
 };
 
 export default function RootLayout({
