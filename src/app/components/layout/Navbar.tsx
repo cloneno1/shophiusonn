@@ -18,6 +18,16 @@ export default function Navbar() {
           <Link href="/robux/group" className={styles.navLink}>Mua Robux Group</Link>
           <Link href="/premium" className={styles.navLink}>Thuê Premium</Link>
           <Link href="/recharge" className={styles.navLink}>Nạp Tiền</Link>
+          <div className={styles.dropdownContainer}>
+            <span className={styles.navLink} style={{ cursor: 'pointer' }}>
+              Liên Kết <span style={{ fontSize: '0.8rem' }}>▼</span>
+            </span>
+            <div className={styles.dropdownMenu}>
+              <Link href="https://facebook.com/" target="_blank" className={styles.dropdownItem}>Page Facebook</Link>
+              <Link href="https://discord.gg/" target="_blank" className={styles.dropdownItem}>Discord</Link>
+              <Link href="#" className={styles.dropdownItem}>Server Minecraft</Link>
+            </div>
+          </div>
         </nav>
         <div className={styles.authActions}>
           {session ? (

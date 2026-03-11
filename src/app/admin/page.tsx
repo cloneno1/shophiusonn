@@ -1,25 +1,60 @@
-'use client';
-
+import { useEffect, useState } from 'react';
 import styles from './admin.module.css';
 
+interface StatData {
+  totalUsers: number;
+  ordersToday: number;
+  monthlyRevenue: number;
+  systemBalance: number;
+}
+
+interface Order {
+  _id: string;
+  username: string;
+  type: string;
+  price: number;
+  status: string;
+}
+
 export default function AdminDashboard() {
-  // In a real app, these would come from an API
-  const stats = [
-    { label: 'Tổng người dùng', value: '1,240' },
-    { label: 'Đơn hàng hôm nay', value: '45' },
-    { label: 'Doanh thu tháng', value: '12,500,000đ' },
-    { label: 'Số dư hệ thống', value: '5,000,000' },
+  const [data, setData] = useState<{ stats: StatData, recentOrders: Order[] } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/admin/stats')
+      .then(res => res.json())
+      .then(json => {
+        setData(json);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading || !data) {
+    return <div className="container" style={{ padding: '2rem' }}>Đang tải dữ liệu thực tế...</div>;
+  }
+
+  const { stats, recentOrders } = data;
+
+  const statCards = [
+    { label: 'Tổng người dùng', value: stats.totalUsers.toLocaleString() },
+    { label: 'Đơn hàng hôm nay', value: stats.ordersToday.toLocaleString() },
+    { label: 'Doanh thu tháng', value: `${stats.monthlyRevenue.toLocaleString()}đ` },
+    { label: 'Số dư hệ thống', value: `${stats.systemBalance.toLocaleString()}đ` },
   ];
 
   return (
     <div>
       <header className={styles.header}>
         <h1>Bảng điều khiển</h1>
-        <p>Chào mừng bạn quay lại trang quản trị.</p>
+        <p>Chào mừng bạn quay lại trang quản trị (Dữ liệu thực tế).</p>
       </header>
 
       <div className={styles.statsGrid}>
-        {stats.map((stat, index) => (
+        {statCards.map((stat, index) => (
           <div key={index} className={styles.statCard}>
             <div className={styles.statValue}>{stat.value}</div>
             <div className={styles.statLabel}>{stat.label}</div>
@@ -41,26 +76,31 @@ export default function AdminDashboard() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>#ORD-1234</td>
-              <td>hiusonn_99</td>
-              <td>Robux Gamepass</td>
-              <td>50,000đ</td>
-              <td><span className={`${styles.statusBadge} ${styles.statusSuccess}`}>Thành công</span></td>
-              <td>
-                <button className={`${styles.actionBtn} ${styles.editBtn}`}>Xem</button>
-              </td>
-            </tr>
-            <tr>
-              <td>#ORD-1235</td>
-              <td>game thủ_01</td>
-              <td>Thuê Premium</td>
-              <td>100,000đ</td>
-              <td><span className={`${styles.statusBadge} ${styles.statusPending}`}>Chờ xử lý</span></td>
-              <td>
-                <button className={`${styles.actionBtn} ${styles.editBtn}`}>Xử lý</button>
-              </td>
-            </tr>
+            {recentOrders.length > 0 ? (
+              recentOrders.map((order) => (
+                <tr key={order._id}>
+                  <td>#{order._id.slice(-6).toUpperCase()}</td>
+                  <td>{order.username}</td>
+                  <td style={{ textTransform: 'capitalize' }}>{order.type}</td>
+                  <td>{order.price.toLocaleString()}đ</td>
+                  <td>
+                    <span className={`${styles.statusBadge} ${
+                      order.status === 'Completed' ? styles.statusSuccess : 
+                      order.status === 'Cancelled' ? '' : styles.statusPending
+                    }`} style={order.status === 'Cancelled' ? { backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' } : {}}>
+                      {order.status}
+                    </span>
+                  </td>
+                  <td>
+                    <button className={`${styles.actionBtn} ${styles.editBtn}`}>Xử lý</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-text-muted)' }}>Chưa có đơn hàng nào trong database</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -110,23 +110,40 @@
 }
 
 .actionBtn {
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
   font-size: 0.85rem;
   cursor: pointer;
-  border: none;
-  transition: opacity 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
 }
 
 .editBtn {
-  background-color: var(--primary-light);
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.editBtn:hover {
+  background-color: #3b82f6;
   color: white;
 }
 
 .deleteBtn {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.2);
+  margin-left: 0.5rem;
+}
+
+.deleteBtn:hover {
   background-color: #ef4444;
   color: white;
-  margin-left: 0.5rem;
 }
 
 .statusBadge {
