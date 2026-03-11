@@ -162,15 +162,7 @@ export default function SettingsManagement() {
         </div>
       </div>
 
-      <div className="glass-panel" style={{ padding: '1.5rem', marginTop: '2rem', borderLeft: '4px solid var(--primary-color)' }}>
-        <h3 style={{ marginBottom: '0.5rem', fontFamily: 'var(--font-outfit)' }}>💡 Ý tưởng tính năng</h3>
-        <ul style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', paddingLeft: '1.2rem' }}>
-          <li>Tích hợp Webhook Discord để báo đơn hàng mới.</li>
-          <li>Kết nối API nạp thẻ tự động (Thesieure, Doithe1s...).</li>
-          <li>Quản lý danh sách đối tác cung cấp Robux.</li>
-          <li>Chỉnh sửa nội dung các trang Chính sách & Điều khoản.</li>
-        </ul>
-      </div>
+
     </div>
   );
 }
