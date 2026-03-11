@@ -1,7 +1,11 @@
 import Link from 'next/link';
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 import styles from './page.module.css';
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+
   return (
     <div className={styles.main}>
       {/* Hero Section */}
@@ -11,16 +15,22 @@ export default function Home() {
           <h1 className={`${styles.title} animate-fade-in`}>
             Shop <span className="text-gradient">Hiusonn</span> Uy Tín Nhất
           </h1>
-          <p className={`${styles.subtitle} animate-fade-in`} style={{ animationDelay: '0.2s' }}>
+          <h2 className={`${styles.subtitle} animate-fade-in`} style={{ animationDelay: '0.2s', fontSize: '1.2rem', fontWeight: 'normal', color: 'rgba(255,255,255,0.7)' }}>
             Hệ thống nạp Robux tự động, giá rẻ, chiết khấu cao. Trải nghiệm ngay để nhận nhiều ưu đãi hấp dẫn!
-          </p>
+          </h2>
           <div className={`${styles.ctaGroup} animate-fade-in`} style={{ animationDelay: '0.4s' }}>
             <Link href="/robux/gamepass" className="btn btn-primary" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem' }}>
               Nạp Robux Ngay
             </Link>
-            <Link href="/register" className="btn btn-secondary" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem' }}>
-              Tạo Tài Khoản
-            </Link>
+            {!session ? (
+              <Link href="/register" className="btn btn-secondary" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem' }}>
+                Tạo Tài Khoản
+              </Link>
+            ) : (
+              <Link href="/dashboard" className="btn btn-secondary" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem' }}>
+                Vào Dashboard
+              </Link>
+            )}
           </div>
           
           <div className={`${styles.statsGrid} animate-fade-in`} style={{ animationDelay: '0.6s' }}>
