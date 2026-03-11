@@ -43,10 +43,17 @@ export async function GET() {
       };
     }));
 
+    // Tự động tạo mã nếu chưa có (cho tài khoản cũ)
+    if (!currentUser.affiliateCode) {
+      currentUser.affiliateCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+      await currentUser.save();
+    }
+
     return NextResponse.json({
       referralCount: referredUsers.length,
       totalEarnings: currentUser.totalAffiliateEarnings || 0,
       currentBalance: currentUser.affiliateBalance || 0,
+      affiliateCode: currentUser.affiliateCode,
       referrals: referralList
     });
   } catch (error) {

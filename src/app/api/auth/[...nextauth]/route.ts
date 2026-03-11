@@ -19,13 +19,19 @@ export const authOptions: NextAuthOptions = {
         const user = await User.findOne({ username: credentials.username });
         
         if (user && (await bcrypt.compare(credentials.password, user.password))) {
+          // Tạo mã giới thiệu nếu chưa có (cho các tài khoản cũ)
+          if (!user.affiliateCode) {
+            user.affiliateCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+            await user.save();
+          }
+
           return { 
             id: user._id.toString(), 
             name: user.username, 
             balance: user.balance,
             affiliateBalance: user.affiliateBalance || 0,
             totalAffiliateEarnings: user.totalAffiliateEarnings || 0,
-            affiliateCode: user.affiliateCode || '',
+            affiliateCode: user.affiliateCode,
             role: user.role
           };
         }

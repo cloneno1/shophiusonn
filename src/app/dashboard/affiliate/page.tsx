@@ -14,6 +14,7 @@ export default function AffiliatePage() {
     referralCount: 0,
     totalEarnings: 0,
     currentBalance: 0,
+    affiliateCode: '',
     referrals: []
   });
   const [loading, setLoading] = useState(true);
@@ -68,7 +69,7 @@ export default function AffiliatePage() {
   };
 
   const referralLink = typeof window !== 'undefined' 
-    ? `${window.location.origin}/register?ref=${session?.user?.affiliateCode}` 
+    ? `${window.location.origin}/register?ref=${stats.affiliateCode || session?.user?.affiliateCode}` 
     : '';
 
   const handleCopy = () => {
