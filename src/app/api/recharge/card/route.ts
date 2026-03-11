@@ -34,10 +34,13 @@ export async function POST(req: Request) {
       await connectDB();
       const newTransaction = new Transaction({
         username,
-        requestId,
-        telco,
         amount: Number(amount),
-        status: 0, // Pending
+        method: 'card',
+        telco,
+        serial,
+        code,
+        requestId,
+        status: 'Pending',
       });
       await newTransaction.save();
     }

@@ -23,9 +23,9 @@ export async function POST(req: Request) {
     await connectDB();
     const transaction = await Transaction.findOne({ requestId: request_id });
 
-    if (transaction && transaction.status === 0) {
+    if (transaction && transaction.status === 'Pending') {
       if (status === 1) { // 1: Thẻ đúng
-        transaction.status = 1;
+        transaction.status = 'Success';
         await transaction.save();
 
         // Cộng tiền cho User
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
           await user.save();
         }
       } else {
-        transaction.status = status; // 2: Thẻ sai, 3: Sai mệnh giá...
+        transaction.status = 'Failed'; // 2: Thẻ sai, 3: Sai mệnh giá...
         await transaction.save();
       }
     }
