@@ -15,6 +15,7 @@ interface User {
 export default function UsersManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetch('/api/admin/users')
@@ -102,6 +103,16 @@ export default function UsersManagement() {
         <p>Xem và chỉnh sửa thông tin người dùng hệ thống.</p>
       </header>
 
+      <div className={styles.searchContainer}>
+        <input 
+          type="text" 
+          placeholder="Tìm tên người dùng..." 
+          className={styles.searchInput}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       <div className="glass-panel" style={{ padding: '1.5rem' }}>
         {loading ? (
           <p>Đang tải danh sách...</p>
@@ -118,7 +129,9 @@ export default function UsersManagement() {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {users
+                .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
+                .map((user) => (
                 <tr key={user._id}>
                   <td>{user.username}</td>
                   <td>{user.balance.toLocaleString()}đ</td>
