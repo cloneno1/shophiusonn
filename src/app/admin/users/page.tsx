@@ -103,18 +103,20 @@ export default function UsersManagement() {
                   </td>
                   <td>{new Date(user.createdAt).toLocaleDateString('vi-VN')}</td>
                   <td>
-                    <button 
-                      className={`${styles.actionBtn} ${styles.editBtn}`}
-                      onClick={() => handleEditBalance(user._id, user.balance)}
-                    >
-                      Sửa
-                    </button>
-                    <button 
-                      className={`${styles.actionBtn} ${styles.deleteBtn}`}
-                      onClick={() => handleToggleStatus(user._id, user.status || 'active')}
-                    >
-                      {user.status === 'blocked' ? 'Mở khóa' : 'Khóa'}
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button 
+                        className={`${styles.actionBtn} ${styles.editBtn}`}
+                        onClick={() => handleEditBalance(user._id, user.balance)}
+                      >
+                        Sửa
+                      </button>
+                      <button 
+                        className={`${styles.actionBtn} ${styles.deleteBtn}`}
+                        onClick={() => handleToggleStatus(user._id, user.status || 'active')}
+                      >
+                        {user.status === 'blocked' ? 'Mở khóa' : 'Khóa'}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -15,31 +15,39 @@ export default function RobuxPage({ params }: { params: Promise<{ type: string }
   const [gamepassUrl, setGamepassUrl] = useState('');
   const [note, setNote] = useState('');
   const [price, setPrice] = useState(0);
+  const [rates, setRates] = useState({ robuxRate120h: 140, robuxRateGroup: 160 });
+  const [currentRate, setCurrentRate] = useState(140);
 
   const isGroup = type === 'group';
   const title = isGroup ? 'Mua Robux Group (Tức Thì)' : 'Mua Robux Gamepass (120H)';
   const description = isGroup
     ? 'Hệ thống tự động chuyển Robux vào tài khoản qua Group 14 ngày. An toàn 100%, có ngay sau 1s.'
     : 'Nạp Robux thông qua Gamepass, đợi 120H (5 ngày) để Robux về tài khoản. Giá cực siêu rẻ.';
-    
-  // Rate: 1 Robux = 140 VND
-  const RATE = 140;
+
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then(res => res.json())
+      .then(data => {
+        setRates(data);
+        setCurrentRate(type === 'group' ? data.robuxRateGroup : data.robuxRate120h);
+      });
+  }, [type]);
 
   useEffect(() => {
     if (typeof robuxAmount === 'number') {
-      setPrice(robuxAmount * RATE);
+      setPrice(robuxAmount * currentRate);
     } else {
       setPrice(0);
     }
-  }, [robuxAmount]);
+  }, [robuxAmount, currentRate]);
 
   const packages = [
-    { id: 1, robux: 100, price: 100 * RATE },
-    { id: 2, robux: 500, price: 500 * RATE },
-    { id: 3, robux: 1000, price: 1000 * RATE },
-    { id: 4, robux: 2000, price: 2000 * RATE },
-    { id: 5, robux: 5000, price: 5000 * RATE },
-    { id: 6, robux: 10000, price: 10000 * RATE },
+    { id: 1, robux: 100, price: 100 * currentRate },
+    { id: 2, robux: 500, price: 500 * currentRate },
+    { id: 3, robux: 1000, price: 1000 * currentRate },
+    { id: 4, robux: 2000, price: 2000 * currentRate },
+    { id: 5, robux: 5000, price: 5000 * currentRate },
+    { id: 6, robux: 10000, price: 10000 * currentRate },
   ];
 
   const handlePackageSelect = (robux: number) => {
@@ -71,7 +79,7 @@ export default function RobuxPage({ params }: { params: Promise<{ type: string }
                 <span style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', fontWeight: 'bold', color: 'var(--color-primary)' }}>R$</span>
               </div>
               <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>
-                * Tỷ giá hiện tại: 1 Robux = {RATE} VNĐ
+                * Tỷ giá hiện tại: 1 Robux = {currentRate} VNĐ
               </p>
             </div>
           </div>

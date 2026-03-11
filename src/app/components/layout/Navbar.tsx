@@ -1,11 +1,24 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const [links, setLinks] = useState({
+    linkFacebook: '',
+    linkDiscord: '',
+    linkMinecraft: '',
+  });
+
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then(res => res.json())
+      .then(data => setLinks(data))
+      .catch(() => {});
+  }, []);
 
   return (
     <header className={`${styles.header} glass-panel`}>
@@ -18,14 +31,13 @@ export default function Navbar() {
           <Link href="/robux/group" className={styles.navLink}>Mua Robux Group</Link>
           <Link href="/premium" className={styles.navLink}>Thuê Premium</Link>
           <Link href="/recharge" className={styles.navLink}>Nạp Tiền</Link>
-          <div className={styles.dropdownContainer}>
-            <span className={styles.navLink} style={{ cursor: 'pointer' }}>
-              Liên Kết <span style={{ fontSize: '0.8rem' }}>▼</span>
-            </span>
-            <div className={styles.dropdownMenu}>
-              <Link href="https://facebook.com/" target="_blank" className={styles.dropdownItem}>Page Facebook</Link>
-              <Link href="https://discord.gg/" target="_blank" className={styles.dropdownItem}>Discord</Link>
-              <Link href="#" className={styles.dropdownItem}>Server Minecraft</Link>
+          
+          <div className={`${styles.navLink} ${styles.dropdown}`}>
+            Liên Kết <span style={{ fontSize: '0.7rem' }}>▼</span>
+            <div className={styles.dropdownContent}>
+              <a href={links.linkFacebook} target="_blank" rel="noreferrer" className={styles.dropdownItem}>Page Facebook</a>
+              <a href={links.linkDiscord} target="_blank" rel="noreferrer" className={styles.dropdownItem}>Discord</a>
+              <a href={links.linkMinecraft} target="_blank" rel="noreferrer" className={styles.dropdownItem}>Server Minecraft</a>
             </div>
           </div>
         </nav>

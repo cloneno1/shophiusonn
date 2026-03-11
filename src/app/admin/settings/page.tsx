@@ -1,22 +1,60 @@
-'use client';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../admin.module.css';
 
 export default function SettingsManagement() {
-  const [siteName, setSiteName] = useState('Shop Hiusonn');
-  const [bankStk, setBankStk] = useState('0334445502');
-  const [bankCtk, setBankCtk] = useState('NGUYEN HIEU SON');
-  const [gamepassRate, setGamepassRate] = useState('140');
-  const [groupRate, setGroupRate] = useState('140');
-  const [fbLink, setFbLink] = useState('https://facebook.com/');
-  const [discordLink, setDiscordLink] = useState('https://discord.gg/');
-  const [mcLink, setMcLink] = useState('mc.hiusonn.com');
-  const [maintenance, setMaintenance] = useState(false);
+  const [config, setConfig] = useState({
+    siteName: 'Shop Hiusonn',
+    bankStk: '0334445502',
+    bankCtk: 'NGUYEN HIEU SON',
+    robuxRate120h: 140,
+    robuxRateGroup: 160,
+    linkFacebook: '',
+    linkDiscord: '',
+    linkMinecraft: '',
+    maintenance: false,
+  });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const handleSave = () => {
-    alert('Đã lưu cấu hình hệ thống! (Tính năng đang phát triển API)');
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then(res => res.json())
+      .then(data => {
+        setConfig(prev => ({ ...prev, ...data }));
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config),
+      });
+      if (res.ok) {
+        alert('Đã lưu cấu hình hệ thống thành công!');
+      } else {
+        alert('Lỗi khi lưu cấu hình');
+      }
+    } catch (err) {
+      alert('Lỗi kết nối API');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setConfig(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : (type === 'number' ? Number(value) : value)
+    }));
+  };
+
+  if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>Đang tải cài đặt...</div>;
 
   return (
     <div>
@@ -25,119 +63,100 @@ export default function SettingsManagement() {
         <p>Tùy chỉnh các thông số hoạt động của website.</p>
       </header>
 
-      <div className="glass-panel" style={{ padding: '2rem', maxWidth: '900px' }}>
-        <div style={{ display: 'grid', gap: '2rem' }}>
-          {/* Cấu hình cơ bản */}
-          <section>
-            <h3 style={{ marginBottom: '1.2rem', color: 'var(--primary-color)' }}>Cấu hình cơ bản</h3>
+      <div className="glass-panel" style={{ padding: '2rem', maxWidth: '800px' }}>
+        <div style={{ display: 'grid', gap: '1.5rem' }}>
+          <div className={styles.formGroup}>
+            <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Tên website</label>
+            <input 
+              type="text" 
+              name="siteName"
+              value={config.siteName} 
+              onChange={handleChange}
+              style={{ width: '100%', padding: '12px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+            />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div className={styles.formGroup}>
-              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.4rem', display: 'block' }}>Tên website</label>
+              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Số tài khoản MB</label>
               <input 
                 type="text" 
-                value={siteName} 
-                onChange={(e) => setSiteName(e.target.value)}
-                style={{ width: '100%', padding: '10px', backgroundColor: '#1a1a24', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+                name="bankStk"
+                value={config.bankStk} 
+                onChange={handleChange}
+                style={{ width: '100%', padding: '12px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
               />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
-              <div className={styles.formGroup}>
-                <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.4rem', display: 'block' }}>Số tài khoản MB</label>
-                <input 
-                  type="text" 
-                  value={bankStk} 
-                  onChange={(e) => setBankStk(e.target.value)}
-                  style={{ width: '100%', padding: '10px', backgroundColor: '#1a1a24', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.4rem', display: 'block' }}>Chủ tài khoản</label>
-                <input 
-                  type="text" 
-                  value={bankCtk} 
-                  onChange={(e) => setBankCtk(e.target.value)}
-                  style={{ width: '100%', padding: '10px', backgroundColor: '#1a1a24', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Tỉ giá Robux */}
-          <section>
-            <h3 style={{ marginBottom: '1.2rem', color: 'var(--primary-color)' }}>Tỉ giá Robux (VNĐ cho 1 R$)</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div className={styles.formGroup}>
-                <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.4rem', display: 'block' }}>Robux Gamepass (120H)</label>
-                <input 
-                  type="number" 
-                  value={gamepassRate} 
-                  onChange={(e) => setGamepassRate(e.target.value)}
-                  style={{ width: '100%', padding: '10px', backgroundColor: '#1a1a24', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.4rem', display: 'block' }}>Robux Group (Fast)</label>
-                <input 
-                  type="number" 
-                  value={groupRate} 
-                  onChange={(e) => setGroupRate(e.target.value)}
-                  style={{ width: '100%', padding: '10px', backgroundColor: '#1a1a24', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Liên kết mạng xã hội */}
-          <section>
-            <h3 style={{ marginBottom: '1.2rem', color: 'var(--primary-color)' }}>Liên kết (Social Links)</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div className={styles.formGroup}>
-                <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.4rem', display: 'block' }}>Facebook Page</label>
-                <input 
-                  type="text" 
-                  value={fbLink} 
-                  onChange={(e) => setFbLink(e.target.value)}
-                  placeholder="https://facebook.com/..."
-                  style={{ width: '100%', padding: '10px', backgroundColor: '#1a1a24', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.4rem', display: 'block' }}>Discord Server</label>
-                <input 
-                  type="text" 
-                  value={discordLink} 
-                  onChange={(e) => setDiscordLink(e.target.value)}
-                  placeholder="https://discord.gg/..."
-                  style={{ width: '100%', padding: '10px', backgroundColor: '#1a1a24', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.4rem', display: 'block' }}>Server Minecraft (IP)</label>
-                <input 
-                  type="text" 
-                  value={mcLink} 
-                  onChange={(e) => setMcLink(e.target.value)}
-                  placeholder="mc.hiusonn.com"
-                  style={{ width: '100%', padding: '10px', backgroundColor: '#1a1a24', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
-                />
-              </div>
-            </div>
-          </section>
-
-          <footer style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div className={styles.formGroup} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div className={styles.formGroup}>
+              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Chủ tài khoản</label>
               <input 
-                type="checkbox" 
-                id="maintenance"
-                checked={maintenance}
-                onChange={(e) => setMaintenance(e.target.checked)}
-                style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                type="text" 
+                name="bankCtk"
+                value={config.bankCtk} 
+                onChange={handleChange}
+                style={{ width: '100%', padding: '12px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
               />
-              <label htmlFor="maintenance" style={{ cursor: 'pointer' }}>Chế độ bảo trì hệ thống</label>
             </div>
-            <button className="btn btn-primary" style={{ padding: '1rem 3rem', fontSize: '1rem' }} onClick={handleSave}>
-              Lưu Thay Đổi
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className={styles.formGroup}>
+              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Tỉ giá 120H (1 R$ = ? VNĐ)</label>
+              <input 
+                type="number" 
+                name="robuxRate120h"
+                value={config.robuxRate120h} 
+                onChange={handleChange}
+                style={{ width: '100%', padding: '12px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Tỉ giá Group (1 R$ = ? VNĐ)</label>
+              <input 
+                type="number" 
+                name="robuxRateGroup"
+                value={config.robuxRateGroup} 
+                onChange={handleChange}
+                style={{ width: '100%', padding: '12px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+              />
+            </div>
+          </div>
+
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
+            <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', color: 'var(--primary-color)' }}>Liên kết mạng xã hội</h3>
+            <div style={{ display: 'grid', gap: '1rem' }}>
+              <div className={styles.formGroup}>
+                <label style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Link Fanpage Facebook</label>
+                <input type="text" name="linkFacebook" value={config.linkFacebook} onChange={handleChange} style={{ width: '100%', padding: '10px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} />
+              </div>
+              <div className={styles.formGroup}>
+                <label style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Link Discord</label>
+                <input type="text" name="linkDiscord" value={config.linkDiscord} onChange={handleChange} style={{ width: '100%', padding: '10px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} />
+              </div>
+              <div className={styles.formGroup}>
+                <label style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Địa chỉ Server Minecraft</label>
+                <input type="text" name="linkMinecraft" value={config.linkMinecraft} onChange={handleChange} style={{ width: '100%', padding: '10px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.formGroup} style={{ display: 'flex', alignItems: 'center', gap: '1rem', backgroundColor: 'rgba(239, 68, 68, 0.05)', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+            <input 
+              type="checkbox" 
+              id="maintenance"
+              name="maintenance"
+              checked={config.maintenance}
+              onChange={handleChange}
+              style={{ width: '20px', height: '20px' }}
+            />
+            <label htmlFor="maintenance" style={{ color: '#ef4444', fontWeight: 'bold' }}>Chế độ bảo trì (Tắt toàn bộ dịch vụ mua hàng)</label>
+          </div>
+
+          <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
+            <button className="btn btn-primary" style={{ padding: '0.8rem 2.5rem', minWidth: '200px' }} onClick={handleSave} disabled={saving}>
+              {saving ? 'Đang lưu...' : 'Lưu tất cả cấu hình'}
             </button>
-          </footer>
+          </div>
         </div>
       </div>
 
