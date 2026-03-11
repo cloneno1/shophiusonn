@@ -151,7 +151,7 @@ export default function RechargePage() {
             </div>
             <div className={styles.bankItem}>
               <span className={styles.bankLabel}>NỘI DUNG CHUYỂN KHOẢN</span>
-              <span className={styles.bankValue}>NAP {session?.user?.name || 'Username'}</span>
+              <span className={styles.bankValue}>shophiusonn {session?.user?.name || 'Username'}</span>
             </div>
           </div>
 
