@@ -8,6 +8,9 @@ declare module "next-auth" {
     user: {
       id: string;
       balance: number;
+      affiliateBalance: number;
+      totalAffiliateEarnings: number;
+      affiliateCode: string;
       role: string;
     } & DefaultSession["user"]
   }
@@ -15,6 +18,9 @@ declare module "next-auth" {
   interface User {
     id: string;
     balance: number;
+    affiliateBalance: number;
+    totalAffiliateEarnings: number;
+    affiliateCode: string;
     role: string;
   }
 }
@@ -24,6 +30,9 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     balance: number;
+    affiliateBalance: number;
+    totalAffiliateEarnings: number;
+    affiliateCode: string;
     role: string;
   }
 }

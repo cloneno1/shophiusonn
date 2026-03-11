@@ -23,6 +23,9 @@ export const authOptions: NextAuthOptions = {
             id: user._id.toString(), 
             name: user.username, 
             balance: user.balance,
+            affiliateBalance: user.affiliateBalance || 0,
+            totalAffiliateEarnings: user.totalAffiliateEarnings || 0,
+            affiliateCode: user.affiliateCode || '',
             role: user.role
           };
         }
@@ -35,6 +38,9 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.balance = user.balance;
+        token.affiliateBalance = user.affiliateBalance;
+        token.totalAffiliateEarnings = user.totalAffiliateEarnings;
+        token.affiliateCode = user.affiliateCode;
         token.role = user.role;
       }
       if (trigger === "update" && session?.balance !== undefined) {
@@ -45,6 +51,9 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.balance = token.balance;
+      session.user.affiliateBalance = token.affiliateBalance;
+      session.user.totalAffiliateEarnings = token.totalAffiliateEarnings;
+      session.user.affiliateCode = token.affiliateCode;
       session.user.role = token.role;
       return session;
     }

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Order from '@/models/Order';
 import User from '@/models/User';
+import SiteConfig from '@/models/SiteConfig';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/route';
 
@@ -26,6 +27,15 @@ export async function POST(req: Request) {
     user.balance -= price;
     await user.save();
 
+    // 2.1 Lấy giá vốn từ cấu hình
+    const configs = await SiteConfig.find({ key: { $in: ['robuxCost120h', 'robuxCostGroup'] } });
+    const configMap = configs.reduce((acc: any, curr) => {
+      acc[curr.key] = curr.value;
+      return acc;
+    }, {});
+    const costPerRobux = type === 'group' ? (configMap.robuxCostGroup || 0) : (configMap.robuxCost120h || 0);
+    const totalCost = amount * costPerRobux;
+
     // 3. Tạo đơn hàng mới
     const newOrder = new Order({
       userId: user._id,
@@ -33,6 +43,7 @@ export async function POST(req: Request) {
       type,
       amount,
       price,
+      cost: totalCost,
       status: 'Pending',
       details: {
         gamepassUrl: details?.gamepassUrl,

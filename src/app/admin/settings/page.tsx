@@ -10,6 +10,8 @@ export default function SettingsManagement() {
     bankCtk: 'NGUYEN HIEU SON',
     robuxRate120h: 140,
     robuxRateGroup: 160,
+    robuxCost120h: 100,
+    robuxCostGroup: 120,
     linkFacebook: '',
     linkDiscord: '',
     linkYoutube: '',
@@ -101,28 +103,33 @@ export default function SettingsManagement() {
             </div>
           </div>
 
+
+
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div className={styles.formGroup}>
-              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Tỉ giá 120H (1 R$ = ? VNĐ)</label>
+              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Giá nhập 120H (Dùng tính lãi)</label>
               <input 
                 type="number" 
-                name="robuxRate120h"
-                value={config.robuxRate120h} 
+                name="robuxCost120h"
+                value={config.robuxCost120h} 
                 onChange={handleChange}
                 style={{ width: '100%', padding: '12px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
               />
             </div>
             <div className={styles.formGroup}>
-              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Tỉ giá Group (1 R$ = ? VNĐ)</label>
+              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Giá nhập Group (Dùng tính lãi)</label>
               <input 
                 type="number" 
-                name="robuxRateGroup"
-                value={config.robuxRateGroup} 
+                name="robuxCostGroup"
+                value={config.robuxCostGroup} 
                 onChange={handleChange}
                 style={{ width: '100%', padding: '12px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
               />
             </div>
           </div>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-primary)', opacity: 0.8, marginTop: '-0.5rem' }}>
+            * Hoa hồng Affiliate = 35% x (Giá bán - Giá nhập).
+          </p>
 
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
             <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', color: 'var(--primary-color)' }}>Liên kết mạng xã hội</h3>

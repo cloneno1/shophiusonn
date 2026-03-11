@@ -5,7 +5,9 @@ const OrderSchema = new mongoose.Schema({
   username: { type: String, required: true }, // Current roblox username for the order
   type: { type: String, required: true }, // gamepass, group, premium
   amount: { type: Number, required: true }, // Robux amount
-  price: { type: Number, required: true }, // VND amount
+  price: { type: Number, required: true }, // VND amount (Revenue)
+  cost: { type: Number, default: 0 }, // VND amount (Cost of goods)
+  commissionPaid: { type: Boolean, default: false },
   status: { type: String, default: 'Pending' }, // Pending, Processing, Completed, Cancelled
   details: { 
     gamepassUrl: String,

@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 
 export async function POST(req: Request) {
   try {
-    const { username, password } = await req.json();
+    const { username, password, refCode } = await req.json();
 
     // Basic Validation
     if (!username || !password) {
@@ -33,10 +33,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: 'Tên đăng nhập đã tồn tại' }, { status: 400 });
     }
 
+    let referredBy = null;
+    if (refCode) {
+      const referrer = await User.findOne({ affiliateCode: refCode });
+      if (referrer) {
+        referredBy = referrer._id;
+      }
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12); // Slightly higher salt rounds
     const newUser = new User({
       username,
       password: hashedPassword,
+      referredBy,
+      affiliateCode: Math.random().toString(36).substring(2, 10).toUpperCase()
     });
 
     await newUser.save();

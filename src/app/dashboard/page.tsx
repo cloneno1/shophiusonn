@@ -113,6 +113,7 @@ export default function DashboardPage() {
             Lịch sử giao dịch
           </button>
           <Link href="/recharge" className={styles.navItem}>Nạp tiền</Link>
+          <Link href="/dashboard/affiliate" className={styles.navItem}>Kiếm tiền Affiliate</Link>
           <button 
             onClick={() => setActiveTab('password')} 
             className={`${styles.navItem} ${activeTab === 'password' ? styles.active : ''}`}
