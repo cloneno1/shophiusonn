@@ -2,6 +2,7 @@
 
 import { useState, use, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styles from '../robux.module.css';
 import RecentActivity from '@/components/RecentActivity';
@@ -14,9 +15,13 @@ export default function RobuxPage({ params }: { params: Promise<{ type: string }
   const [username, setUsername] = useState('');
   const [gamepassUrl, setGamepassUrl] = useState('');
   const [note, setNote] = useState('');
+  const [image, setImage] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [price, setPrice] = useState(0);
   const [rates, setRates] = useState({ robuxRate120h: 140, robuxRateGroup: 160 });
   const [currentRate, setCurrentRate] = useState(140);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const isGroup = type === 'group';
   const title = isGroup ? 'Mua Robux Group (Tức Thì)' : 'Mua Robux Gamepass (120H)';
@@ -52,6 +57,61 @@ export default function RobuxPage({ params }: { params: Promise<{ type: string }
 
   const handlePackageSelect = (robux: number) => {
     setRobuxAmount(robux);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert('Ảnh quá lớn, vui lòng chọn ảnh dưới 2MB');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setImage(base64String);
+        setImagePreview(base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!robuxAmount || !username) {
+      alert('Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username,
+          type: isGroup ? 'group' : 'gamepass',
+          amount: robuxAmount,
+          price,
+          details: {
+            gamepassUrl,
+            image,
+            note
+          }
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert('Đặt hàng thành công!');
+        router.push('/dashboard');
+      } else {
+        alert(data.message || 'Có lỗi xảy ra');
+      }
+    } catch (err) {
+      alert('Lỗi kết nối server');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -158,6 +218,44 @@ export default function RobuxPage({ params }: { params: Promise<{ type: string }
                 ></textarea>
               </div>
 
+              <div className={styles.formGroup}>
+                <label>Tải ảnh đính kèm (Không bắt buộc)</label>
+                <div style={{ 
+                  border: '2px dashed var(--color-border)', 
+                  padding: '1rem', 
+                  borderRadius: '12px', 
+                  textAlign: 'center',
+                  backgroundColor: 'rgba(255,255,255,0.02)',
+                  position: 'relative'
+                }}>
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleImageChange}
+                    style={{ 
+                      position: 'absolute', 
+                      top: 0, 
+                      left: 0, 
+                      width: '100%', 
+                      height: '100%', 
+                      opacity: 0, 
+                      cursor: 'pointer' 
+                    }}
+                  />
+                  {imagePreview ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                      <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '8px' }} />
+                      <button type="button" onClick={() => { setImage(null); setImagePreview(null); }} style={{ color: '#ef4444', fontSize: '0.8rem', background: 'none', border: 'none', cursor: 'pointer' }}>Xóa ảnh</button>
+                    </div>
+                  ) : (
+                    <div style={{ color: 'var(--color-text-muted)' }}>
+                      <p style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>📸</p>
+                      <p style={{ fontSize: '0.85rem' }}>Bấm để chọn ảnh hoặc kéo thả vào đây</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className={styles.summary}>
                 <div className={styles.summaryRow}>
                   <span>Số lượng:</span>
@@ -169,8 +267,13 @@ export default function RobuxPage({ params }: { params: Promise<{ type: string }
                 </div>
               </div>
 
-              <button type="button" className={`btn btn-primary ${styles.buyBtn}`}>
-                Thanh Toán Ngay
+               <button 
+                type="button" 
+                className={`btn btn-primary ${styles.buyBtn}`} 
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {loading ? 'Đang xử lý...' : 'Thanh Toán Ngay'}
               </button>
             </form>
             <div className={styles.trustBadges}>

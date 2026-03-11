@@ -12,6 +12,7 @@ interface Order {
   status: string;
   details: {
     gamepassUrl?: string;
+    image?: string;
     note?: string;
   };
   createdAt: string;
@@ -87,7 +88,8 @@ export default function OrdersManagement() {
                     <td>{order.price.toLocaleString()}đ</td>
                     <td>
                       <div style={{ fontSize: '0.8rem' }}>
-                        {order.details.gamepassUrl && <a href={order.details.gamepassUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--primary-color)' }}>Link Gamepass</a>}
+                        {order.details.gamepassUrl && <a href={order.details.gamepassUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--primary-color)', display: 'block' }}>Link Gamepass</a>}
+                        {order.details.image && <a href={order.details.image} target="_blank" rel="noreferrer" style={{ color: '#3b82f6', display: 'block' }}>Xem ảnh đính kèm</a>}
                         {order.details.note && <p>Ghi chú: {order.details.note}</p>}
                       </div>
                     </td>

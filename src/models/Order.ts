@@ -9,6 +9,7 @@ const OrderSchema = new mongoose.Schema({
   status: { type: String, default: 'Pending' }, // Pending, Processing, Completed, Cancelled
   details: { 
     gamepassUrl: String,
+    image: String,
     note: String
   },
   createdAt: { type: Date, default: Date.now },
