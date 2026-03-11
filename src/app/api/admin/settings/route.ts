@@ -19,7 +19,7 @@ export async function GET() {
       robuxRateGroup: 160,
       linkFacebook: 'https://facebook.com',
       linkDiscord: 'https://discord.gg',
-      linkMinecraft: 'mc.shophiusonn.com',
+      linkYoutube: 'https://youtube.com',
     };
 
     return NextResponse.json({ ...defaultConfig, ...configMap });

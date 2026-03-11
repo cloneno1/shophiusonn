@@ -12,7 +12,7 @@ export default function SettingsManagement() {
     robuxRateGroup: 160,
     linkFacebook: '',
     linkDiscord: '',
-    linkMinecraft: '',
+    linkYoutube: '',
     maintenance: false,
   });
   const [loading, setLoading] = useState(true);
@@ -136,8 +136,8 @@ export default function SettingsManagement() {
                 <input type="text" name="linkDiscord" value={config.linkDiscord} onChange={handleChange} style={{ width: '100%', padding: '10px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} />
               </div>
               <div className={styles.formGroup}>
-                <label style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Địa chỉ Server Minecraft</label>
-                <input type="text" name="linkMinecraft" value={config.linkMinecraft} onChange={handleChange} style={{ width: '100%', padding: '10px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} />
+                <label style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Link Youtube</label>
+                <input type="text" name="linkYoutube" value={config.linkYoutube} onChange={handleChange} style={{ width: '100%', padding: '10px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} />
               </div>
             </div>
           </div>

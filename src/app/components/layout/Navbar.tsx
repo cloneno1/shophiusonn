@@ -10,13 +10,19 @@ export default function Navbar() {
   const [links, setLinks] = useState({
     linkFacebook: '',
     linkDiscord: '',
-    linkMinecraft: '',
+    linkYoutube: '',
   });
 
   useEffect(() => {
     fetch('/api/admin/settings')
       .then(res => res.json())
-      .then(data => setLinks(data))
+      .then(data => {
+        setLinks({
+          linkFacebook: data.linkFacebook || '',
+          linkDiscord: data.linkDiscord || '',
+          linkYoutube: data.linkYoutube || '',
+        });
+      })
       .catch(() => {});
   }, []);
 
@@ -32,12 +38,12 @@ export default function Navbar() {
           <Link href="/premium" className={styles.navLink}>Thuê Premium</Link>
           <Link href="/recharge" className={styles.navLink}>Nạp Tiền</Link>
           
-          <div className={`${styles.navLink} ${styles.dropdown}`}>
+          <div className={`${styles.navLink} ${styles.dropdown}`} style={{ color: 'var(--color-primary)' }}>
             Liên Kết <span style={{ fontSize: '0.7rem' }}>▼</span>
             <div className={styles.dropdownContent}>
               <a href={links.linkFacebook} target="_blank" rel="noreferrer" className={styles.dropdownItem}>Page Facebook</a>
               <a href={links.linkDiscord} target="_blank" rel="noreferrer" className={styles.dropdownItem}>Discord</a>
-              <a href={links.linkMinecraft} target="_blank" rel="noreferrer" className={styles.dropdownItem}>Server Minecraft</a>
+              <a href={links.linkYoutube} target="_blank" rel="noreferrer" className={styles.dropdownItem}>Kênh Youtube</a>
             </div>
           </div>
         </nav>
