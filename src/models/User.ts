@@ -4,7 +4,12 @@ export interface IUser extends Document {
   username: string;
   password: string;
   balance: number;
+  affiliateBalance: number;
+  totalAffiliateEarnings: number;
+  referredBy?: mongoose.Types.ObjectId;
+  affiliateCode?: string;
   role: string;
+  status: string;
   createdAt: Date;
 }
 

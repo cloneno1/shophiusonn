@@ -17,6 +17,8 @@ export async function GET() {
     const defaultConfig = {
       robuxRate120h: 140,
       robuxRateGroup: 160,
+      robuxCost120h: 100,
+      robuxCostGroup: 120,
       linkFacebook: 'https://facebook.com',
       linkDiscord: 'https://discord.gg',
       linkYoutube: 'https://youtube.com',

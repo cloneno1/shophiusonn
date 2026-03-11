@@ -107,7 +107,17 @@ export default function SettingsManagement() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div className={styles.formGroup}>
-              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Giá nhập 120H (Dùng tính lãi)</label>
+              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Giá Bán 120H (1 R$ = ? VNĐ)</label>
+              <input 
+                type="number" 
+                name="robuxRate120h"
+                value={config.robuxRate120h} 
+                onChange={handleChange}
+                style={{ width: '100%', padding: '12px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Giá Nhập 120H (Dùng tính lãi)</label>
               <input 
                 type="number" 
                 name="robuxCost120h"
@@ -116,8 +126,21 @@ export default function SettingsManagement() {
                 style={{ width: '100%', padding: '12px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
               />
             </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div className={styles.formGroup}>
-              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Giá nhập Group (Dùng tính lãi)</label>
+              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Giá Bán Group (1 R$ = ? VNĐ)</label>
+              <input 
+                type="number" 
+                name="robuxRateGroup"
+                value={config.robuxRateGroup} 
+                onChange={handleChange}
+                style={{ width: '100%', padding: '12px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label style={{ color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'block' }}>Giá Nhập Group (Dùng tính lãi)</label>
               <input 
                 type="number" 
                 name="robuxCostGroup"

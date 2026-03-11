@@ -76,6 +76,7 @@ export default function RechargePage() {
                   <option value="VINAPHONE">Vinaphone</option>
                   <option value="MOBIFONE">Mobifone</option>
                   <option value="ZING">Zing</option>
+                  <option value="GARENA">Garena</option>
                 </select>
               </div>
               <div className={styles.formGroup}>

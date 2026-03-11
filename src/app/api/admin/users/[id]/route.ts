@@ -19,20 +19,33 @@ export async function PATCH(
     const { balance, status, role } = await req.json();
 
     await connectDB();
-    const updateData: any = {};
-    if (balance !== undefined) updateData.balance = balance;
-    if (status !== undefined) updateData.status = status;
-    if (role !== undefined) updateData.role = role;
-
-    const user = await User.findByIdAndUpdate(id, updateData, { new: true });
+    const user = await User.findById(id);
 
     if (!user) {
+      console.log('User not found in DB with ID:', id);
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
+    console.log('Found User:', user.username, 'Current Balance:', user.balance);
+    console.log('Request body - Balance:', balance, 'Status:', status, 'Role:', role);
+
+    if (balance !== undefined) {
+      user.balance = Number(balance);
+    }
+    if (status !== undefined) {
+      user.status = status;
+    }
+    if (role !== undefined) {
+      user.role = role;
+    }
+
+    await user.save();
+
+    console.log('User saved successfully. New Balance in DB:', user.balance);
     return NextResponse.json(user);
-  } catch (error) {
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Update User Error Details:', error);
+    return NextResponse.json({ message: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
 

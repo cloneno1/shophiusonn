@@ -40,9 +40,14 @@ export default function UsersManagement() {
       });
       if (res.ok) {
         setUsers(users.map(u => u._id === id ? { ...u, balance: Number(newBalance) } : u));
+        alert('Cập nhật số dư thành công!');
+      } else {
+        const errorData = await res.json();
+        alert('Lỗi: ' + (errorData.message || 'Không thể cập nhật số dư'));
       }
     } catch (err) {
-      alert('Lỗi cập nhật số dư');
+      console.error(err);
+      alert('Lỗi kết nối máy chủ khi cập nhật số dư');
     }
   };
 
@@ -58,9 +63,13 @@ export default function UsersManagement() {
       });
       if (res.ok) {
         setUsers(users.map(u => u._id === id ? { ...u, role: newRole } : u));
+        alert('Cập nhật quyền hạn thành công!');
+      } else {
+        const data = await res.json();
+        alert('Lỗi: ' + (data.message || 'Không thể cập nhật quyền'));
       }
     } catch (err) {
-      alert('Lỗi cập nhật quyền hạn');
+      alert('Lỗi kết nối máy chủ');
     }
   };
 
@@ -76,9 +85,13 @@ export default function UsersManagement() {
       });
       if (res.ok) {
         setUsers(users.map(u => u._id === id ? { ...u, status: newStatus } : u));
+        alert('Cập nhật trạng thái thành công!');
+      } else {
+        const data = await res.json();
+        alert('Lỗi: ' + (data.message || 'Không thể cập nhật trạng thái'));
       }
     } catch (err) {
-      alert('Lỗi cập nhật trạng thái');
+      alert('Lỗi kết nối máy chủ');
     }
   };
 
