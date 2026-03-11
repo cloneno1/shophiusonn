@@ -134,7 +134,7 @@ export default function RechargePage() {
         {/* Cột 2: Chuyển khoản ngân hàng */}
         <div className={`${styles.rechargeCard} glass-panel animate-fade-in`} style={{ margin: 0, maxWidth: '100%' }}>
           <h2 className={styles.title}>Chuyển Khoản / Ví Điện Tử</h2>
-          <p className={styles.subtitle}>Cộng tiền tự động qua nội dung chuyển khoản</p>
+          <p className={styles.subtitle}>Sẽ được Admin xử lý nhanh chóng sau khi chuyển khoản</p>
 
           <div className={styles.bankInfo}>
             <div className={styles.bankItem}>
@@ -158,7 +158,7 @@ export default function RechargePage() {
           <div className={styles.qrContainer}>
             <img src="/qr-bank.png" alt="MB Bank QR Code" className={styles.qrImage} />
             <p style={{ marginTop: '1rem', color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
-              Quét mã QR để tự động nhập thông tin và nội dung
+              Vui lòng chuyển đúng nội dung để được xử lý nhanh nhất
             </p>
           </div>
 
@@ -167,7 +167,7 @@ export default function RechargePage() {
             <ul>
               <li>Vui lòng nhập đúng nội dung chuyển khoản.</li>
               <li>Nạp tối thiểu 10,000 VNĐ.</li>
-              <li>Hệ thống cộng tiền tự động sau 30s - 1 phút.</li>
+              <li>Admin sẽ kiểm tra và cộng tiền trong vài phút.</li>
             </ul>
           </div>
         </div>
