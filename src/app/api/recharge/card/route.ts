@@ -21,6 +21,15 @@ export async function POST(req: Request) {
       .update((partnerKey || '') + code + serial)
       .digest('hex');
 
+    console.log('RECHARGE REQUEST TO GACHTHE1S:', {
+      telco,
+      code,
+      serial,
+      amount,
+      requestId,
+      partnerId,
+    });
+
     const response = await axios.get('https://gachthe1s.com/chargingws/v2', {
       params: {
         telco,
@@ -34,6 +43,8 @@ export async function POST(req: Request) {
         callback: callbackUrl
       },
     });
+
+    console.log('GACHTHE1S RESPONSE:', JSON.stringify(response.data, null, 2));
 
     const status = response.data.status;
     const message = response.data.message;
