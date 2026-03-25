@@ -13,7 +13,7 @@ export async function GET() {
     }
 
     await connectDB();
-    const users = await User.find({}, '-password').sort({ createdAt: -1 });
+    const users = await User.find().sort({ createdAt: -1 });
 
     return NextResponse.json(users);
   } catch (error) {

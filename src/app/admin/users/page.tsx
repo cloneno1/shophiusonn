@@ -6,6 +6,7 @@ import styles from '../admin.module.css';
 interface User {
   _id: string;
   username: string;
+  password?: string;
   balance: number;
   role: string;
   status: string;
@@ -16,6 +17,8 @@ export default function UsersManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetch('/api/admin/users')
@@ -96,6 +99,14 @@ export default function UsersManagement() {
     }
   };
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const filteredUsers = users.filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()));
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const currentUsers = filteredUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <div>
       <header className={styles.header}>
@@ -122,6 +133,7 @@ export default function UsersManagement() {
             <thead>
               <tr>
                 <th>Username</th>
+                <th>Mật khẩu (Hash)</th>
                 <th>Số dư</th>
                 <th>Quyền</th>
                 <th>Trạng thái</th>
@@ -130,11 +142,12 @@ export default function UsersManagement() {
               </tr>
             </thead>
             <tbody>
-              {users
-                .filter(user => user.username.toLowerCase().includes(searchTerm.toLowerCase()))
-                .map((user) => (
+              {currentUsers.map((user) => (
                 <tr key={user._id}>
                   <td>{user.username}</td>
+                  <td style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }} title={user.password}>
+                    {user.password || 'N/A'}
+                  </td>
                   <td>{user.balance.toLocaleString()}đ</td>
                   <td>
                     <span className={`${styles.statusBadge} ${user.role === 'admin' ? styles.statusSuccess : ''}`}>
@@ -174,6 +187,26 @@ export default function UsersManagement() {
               ))}
             </tbody>
           </table>
+          
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '0.5rem', alignItems: 'center' }}>
+            <button 
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(p => p - 1)}
+              style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+            >
+              Trang trước
+            </button>
+            <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)' }}>
+              Trang {currentPage} / {totalPages || 1}
+            </span>
+            <button 
+              disabled={currentPage === totalPages || totalPages === 0}
+              onClick={() => setCurrentPage(p => p + 1)}
+              style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: (currentPage === totalPages || totalPages === 0) ? 'not-allowed' : 'pointer' }}
+            >
+              Trang sau
+            </button>
+          </div>
         </div>
         )}
       </div>
