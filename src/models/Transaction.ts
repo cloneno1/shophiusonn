@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 const TransactionSchema = new mongoose.Schema({
   username: { type: String, required: true },
-  amount: { type: Number, required: true },
+  amount: { type: Number, required: true }, // The original value of card/bank (e.g. 100k)
+  receivedAmount: { type: Number }, // The final balance credited (after fees/penalties)
   method: { type: String, required: true }, // 'card' or 'bank'
   telco: { type: String }, // For card
   serial: { type: String }, // For card

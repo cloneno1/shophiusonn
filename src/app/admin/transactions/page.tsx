@@ -7,6 +7,7 @@ interface Transaction {
   _id: string;
   username: string;
   amount: number;
+  receivedAmount?: number;
   method: string;
   telco?: string;
   serial?: string;
@@ -78,7 +79,7 @@ export default function TransactionsManagement() {
                 <tr>
                   <th>Khách hàng</th>
                   <th>Phương thức</th>
-                  <th>Mệnh giá</th>
+                  <th>Mệnh giá / Thực nhận</th>
                   <th>Chi tiết (Thẻ)</th>
                   <th>Thời gian</th>
                   <th>Trạng thái</th>
@@ -94,16 +95,12 @@ export default function TransactionsManagement() {
                         {tx.method === 'bank' ? 'Bank' : 'Thẻ cào'}
                       </span>
                     </td>
-                    <td>{tx.amount.toLocaleString()}đ</td>
                     <td>
-                      {tx.method === 'card' ? (
-                        <div style={{ fontSize: '0.8rem' }}>
-                          <p>Loại: {tx.telco}</p>
-                          <p>Seri: {tx.serial}</p>
-                          <p>Mã: {tx.code}</p>
+                      <div style={{ fontWeight: 'bold' }}>{tx.amount.toLocaleString()}đ</div>
+                      {tx.receivedAmount && tx.receivedAmount !== tx.amount && (
+                        <div style={{ fontSize: '0.75rem', color: 'var(--color-primary)' }}>
+                          Nhận: {tx.receivedAmount.toLocaleString()}đ
                         </div>
-                      ) : (
-                        <span style={{ color: 'var(--color-text-muted)' }}>-</span>
                       )}
                     </td>
                     <td>{new Date(tx.createdAt).toLocaleString('vi-VN')}</td>
@@ -114,6 +111,11 @@ export default function TransactionsManagement() {
                       }`} style={tx.status === 'Failed' ? { backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' } : {}}>
                         {tx.status}
                       </span>
+                      {tx.adminNote && (
+                        <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginTop: '4px', maxWidth: '150px' }}>
+                          {tx.adminNote}
+                        </div>
+                      )}
                     </td>
                     <td>
                       <select 

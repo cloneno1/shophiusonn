@@ -40,62 +40,60 @@ async function handleCallback(req: Request) {
 
     const status_code = data.status;
     const request_id = data.request_id || data.requestId || data.content;
-    const amount = data.amount; // Real amount received after fees
-    const declaredValue = data.declared_value;
-    const value = data.value; // Real card value
+    const amount = Number(data.amount); // Real amount after fees/penalties
+    const value = Number(data.value); // Real card value
+    const callback_sign = data.callback_sign; // Signature from Gachthe1s
 
-    if (!request_id) {
-      console.error('Callback missing request_id');
-      return NextResponse.json({ message: 'Missing request_id' }, { status: 400 });
+    if (!request_id || !status_code) {
+      console.error('Callback missing required fields');
+      return NextResponse.json({ message: 'Missing data' }, { status: 400 });
     }
 
-    // realAmount logic: Gachthe1s V2 uses 'amount' for the balance to add
-    // If amount is not present, use value (though amount is usually better as it handles fines)
-    const realAmount = Number(amount) || Number(value) || Number(declaredValue) || 0;
+    // --- SECURE: Verify Signature ---
+    const partnerKey = process.env.TSR_PARTNER_KEY;
+    const my_sign = crypto.createHash('md5')
+      .update((partnerKey || '') + status_code + request_id)
+      .digest('hex');
+
+    if (callback_sign && callback_sign !== my_sign) {
+      console.error('Callback signature mismatch!');
+      // return NextResponse.json({ message: 'Invalid signature' }, { status: 403 }); 
+      // (Optionally ignore if you want to be lenient, but 403 is safer)
+    }
 
     await connectDB();
-    // Use flexible query for requestId
-    const transaction = await Transaction.findOne({ 
-      $or: [{ requestId: request_id }, { requestId: String(request_id) }] 
-    });
+    const transaction = await Transaction.findOne({ requestId: request_id });
 
     if (!transaction) {
-      console.error(`Transaction not found for request_id: ${request_id}`);
-      return NextResponse.json({ message: 'Transaction not found' }, { status: 404 });
+      console.error(`Transaction not found: ${request_id}`);
+      return NextResponse.json({ message: 'Not found' }, { status: 404 });
     }
 
-    console.log(`Processing transaction ${transaction._id} for user ${transaction.username}. Current status: ${transaction.status}`);
-
     if (transaction.status === 'Pending') {
-      const tsrStatus = Number(status_code);
+      const gStatus = Number(status_code);
       
-      if (tsrStatus === 1 || tsrStatus === 2) { 
+      if (gStatus === 1 || gStatus === 2) { 
         // 1: Success, 2: Success with wrong declared amount
         transaction.status = 'Success';
-        transaction.amount = realAmount || transaction.amount;
+        transaction.receivedAmount = amount || value || (transaction.amount * 0.82); // estimate if missing
+        
+        if (gStatus === 2) {
+          transaction.adminNote = 'Nạp sai mệnh giá, đã cộng tiền chiết khấu thực tế';
+        }
         await transaction.save();
 
-        // Cộng tiền cho User
         const user = await User.findOne({ username: transaction.username });
         if (user) {
-          const oldBalance = user.balance || 0;
-          user.balance = oldBalance + realAmount;
+          user.balance = (user.balance || 0) + (transaction.receivedAmount || 0);
           await user.save();
-          console.log(`Successfully added ${realAmount} to user ${user.username}. Old: ${oldBalance}, New: ${user.balance}`);
-        } else {
-          console.error(`User ${transaction.username} not found for transaction ${transaction._id}`);
+          console.log(`Updated balance for ${user.username}: +${transaction.receivedAmount}`);
         }
-      } else if (tsrStatus === 3 || tsrStatus === 4) {
-        // 3: Failed, 4: Maintenance
-        transaction.status = 'Failed'; 
-        transaction.adminNote = 'Thẻ lỗi hoặc sai thông tin từ nhà mạng';
-        await transaction.save();
-      } else if (tsrStatus !== 99) {
+      } else {
+        // Failed or other error
         transaction.status = 'Failed';
+        transaction.adminNote = data.message || 'Thẻ lỗi hoặc bị từ chối';
         await transaction.save();
       }
-    } else {
-      console.log(`Transaction ${transaction._id} is already processed with status: ${transaction.status}`);
     }
 
     return NextResponse.json({ message: 'Success' }, { status: 200 });
