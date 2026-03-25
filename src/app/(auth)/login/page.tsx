@@ -39,7 +39,7 @@ export default function Login() {
       <div className={`${styles.authCard} glass-panel animate-fade-in`}>
         <div className={styles.authHeader}>
           <h1 className={styles.authTitle}>Đăng Nhập</h1>
-          <p className={styles.authSubtitle}>Chào mừng bạn quay lại Shop Robux Việt!</p>
+          <p className={styles.authSubtitle}>Chào mừng bạn quay lại Shop Hiusonn!</p>
         </div>
 
         <form className={styles.authForm} onSubmit={handleSubmit}>

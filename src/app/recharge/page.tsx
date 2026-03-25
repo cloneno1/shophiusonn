@@ -37,7 +37,9 @@ export default function RechargePage() {
       });
       const data = await res.json();
 
-      if (data.status === 99) {
+      const isSuccess = data.status === 1 || data.status === 99 || data.message === 'VALID_CARD';
+
+      if (isSuccess) {
         setMessage({ type: 'success', text: 'Gửi thẻ thành công! Vui lòng đợi hệ thống kiểm tra.' });
         setFormData({ ...formData, serial: '', code: '' });
       } else {

@@ -30,7 +30,11 @@ export async function POST(req: Request) {
       },
     });
 
-    if (response.data.status === 99) {
+    const status = response.data.status;
+    const message = response.data.message;
+
+    // 1: Success immediately (rare), 99: Pending (common), or if message is VALID_CARD
+    if (status === 1 || status === 99 || message === 'VALID_CARD') {
       await connectDB();
       const newTransaction = new Transaction({
         username,
