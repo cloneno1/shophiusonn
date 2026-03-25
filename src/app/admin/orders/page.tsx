@@ -69,7 +69,7 @@ export default function OrdersManagement() {
         {loading ? (
           <p>Đang tải danh sách...</p>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-responsive">
             <table className={styles.adminTable}>
               <thead>
                 <tr>

@@ -147,7 +147,7 @@ export default function DashboardPage() {
               <h2>Lịch Sử Giao Dịch</h2>
             </div>
 
-            <div className={`${styles.tableContainer} glass-panel`}>
+            <div className={`${styles.tableContainer} glass-panel table-responsive`}>
               <table className={styles.table}>
                 <thead>
                   <tr>

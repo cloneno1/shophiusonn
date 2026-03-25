@@ -117,6 +117,7 @@ export default function UsersManagement() {
         {loading ? (
           <p>Đang tải danh sách...</p>
         ) : (
+        <div className="table-responsive">
           <table className={styles.adminTable}>
             <thead>
               <tr>
@@ -173,6 +174,7 @@ export default function UsersManagement() {
               ))}
             </tbody>
           </table>
+        </div>
         )}
       </div>
     </div>

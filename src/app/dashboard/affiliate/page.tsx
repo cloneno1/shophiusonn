@@ -162,7 +162,7 @@ export default function AffiliatePage() {
           </p>
         </div>
 
-        <div className={`${styles.tableContainer} glass-panel`}>
+        <div className={`${styles.tableContainer} glass-panel table-responsive`}>
           <div style={{ padding: '1.5rem 1.5rem 0' }}>
             <h3>Thành viên đã giới thiệu</h3>
           </div>

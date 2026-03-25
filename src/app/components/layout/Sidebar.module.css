@@ -2,10 +2,10 @@
   width: 280px;
   background-color: #0d0d12;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
-  height: 100vh;
+  height: calc(100vh - 80px);
   position: fixed;
   left: 0;
-  top: 0;
+  top: 80px;
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -101,8 +101,8 @@
   background: rgba(88, 101, 242, 0.2);
 }
 
-/* Mobile responsive styles */
-@media (max-width: 900px) {
+/* Desktop responsive styles */
+@media (min-width: 901px) {
   .sidebar {
     transform: translateX(-100%);
   }
@@ -112,8 +112,13 @@
   }
 }
 
-@media (min-width: 901px) {
+/* Mobile responsive styles */
+@media (max-width: 900px) {
   .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .sidebarOpen {
     transform: translateX(0);
   }
 }

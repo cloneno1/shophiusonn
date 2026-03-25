@@ -93,14 +93,17 @@
 }
 
 .tableContainer {
+  width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-lg);
+  margin-bottom: var(--space-md);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 800px;
+  min-width: 700px; /* Reduced slightly to fit better, though it will scroll anyway */
 }
 
 .table th,

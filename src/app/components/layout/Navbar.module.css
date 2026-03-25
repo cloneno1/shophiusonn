@@ -1,7 +1,9 @@
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 1100;
   border-left: none;
   border-right: none;
   border-top: none;
@@ -66,12 +68,12 @@
   background: none;
   border: none;
   padding: 0;
+  transition: transform 0.2s ease;
 }
 
-@media (min-width: 901px) {
-  .menuButton {
-    display: none;
-  }
+.menuButton:hover {
+  color: var(--color-primary);
+  transform: scale(1.1);
 }
 
 :global(.md-hidden) {
