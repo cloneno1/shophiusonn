@@ -30,6 +30,22 @@ export async function POST(req: Request) {
       partnerId,
     });
 
+    // 1. Tạo đơn hàng trong DB TRƯỚC khi gửi đi (để chắc chắn callback có ID)
+    await connectDB();
+    const newTransaction = new Transaction({
+      username,
+      amount: Number(amount),
+      method: 'card',
+      telco,
+      serial,
+      code,
+      requestId,
+      status: 'Pending',
+    });
+    await newTransaction.save();
+    console.log(`Transaction PRE-SAVED: ${requestId}`);
+
+    // 2. Gửi yêu cầu sang Gachthe1s
     const response = await axios.get('https://gachthe1s.com/chargingws/v2', {
       params: {
         telco,
@@ -49,20 +65,9 @@ export async function POST(req: Request) {
     const status = response.data.status;
     const message = response.data.message;
 
-    // 1: Success immediately (rare), 99: Pending (common), or if message is VALID_CARD
-    if (status === 1 || status === 99 || message === 'VALID_CARD') {
-      await connectDB();
-      const newTransaction = new Transaction({
-        username,
-        amount: Number(amount),
-        method: 'card',
-        telco,
-        serial,
-        code,
-        requestId,
-        status: 'Pending',
-      });
-      await newTransaction.save();
+    // Nếu Gachthe1s trả về lỗi ngay lập tức, cập nhật trạng thái đơn (tùy chọn)
+    if (status !== 1 && status !== 99 && message !== 'VALID_CARD') {
+       await Transaction.findOneAndUpdate({ requestId }, { status: 'Failed', adminNote: message });
     }
 
     return NextResponse.json(response.data);

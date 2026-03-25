@@ -54,16 +54,25 @@ async function handleCallback(req: Request) {
     
     // DEBUG: Kiểm tra tên Database và tồng số record hiện có
     const dbName = db.connection?.name || 'unknown';
-    const totalCount = await Transaction.countDocuments();
-    console.log(`Callback DB Info: Name=${dbName}, Total Transactions=${totalCount}`);
+    
+    // CƠ CHẾ THỬ LẠI (Retry): Chờ đợi giây lát phòng trường hợp DB chưa kịp commit
+    let transaction = null;
+    let retries = 0;
+    const maxRetries = 3;
 
-    // Tìm kiếm linh hoạt hơn dùng Regex để tránh các lỗi khoảng trắng hoặc kiểu dữ liệu
-    const transaction = await Transaction.findOne({ 
-      requestId: { $regex: new RegExp(`^${request_id.toString().trim()}$`, 'i') }
-    });
+    while (retries < maxRetries) {
+      transaction = await Transaction.findOne({ 
+        requestId: { $regex: new RegExp(`^${request_id.toString().trim()}$`, 'i') }
+      });
+      if (transaction) break;
+      retries++;
+      console.log(`Transaction NOT FOUND, retrying... (${retries}/${maxRetries})`);
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Đợi 1.5s rồi tìm lại
+    }
 
     if (!transaction) {
-      console.error(`Transaction not found: ${request_id}. DB Name: ${dbName}, Total DB: ${totalCount}`);
+      const totalCount = await Transaction.countDocuments();
+      console.error(`FINAL_ERROR: Transaction not found: ${request_id}. DB: ${dbName}, Total: ${totalCount}`);
       // Ghi thêm log hỗ trợ để debug các giao dịch gần đây
       const recent = await Transaction.find().sort({ createdAt: -1 }).limit(5).select('requestId status').lean();
       console.log('Recent 5 IDs in DB:', recent.map((t: any) => `[ID:${t.requestId}, Stat:${t.status}]`).join(' | '));
