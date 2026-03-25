@@ -122,12 +122,6 @@ img {
   }
 }
 
-@media (min-width: 901px) {
-  .main-content {
-    padding-left: 280px;
-    width: 100%;
-  }
-}
 
 /* Glassmorphism Class */
 .glass-panel {
