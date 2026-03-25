@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import AuthProvider from "@/components/AuthProvider";
-import Navbar from "./components/layout/Navbar";
-import Footer from "./components/layout/Footer";
+import MainLayout from "./components/layout/MainLayout";
 import "./globals.css";
 
 const inter = Inter({
@@ -32,13 +31,9 @@ export default function RootLayout({
     <html lang="vi">
       <body className={`${inter.variable} ${outfit.variable}`}>
         <AuthProvider>
-          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Navbar />
-            <main style={{ flex: 1 }}>
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <MainLayout>
+            {children}
+          </MainLayout>
         </AuthProvider>
       </body>
     </html>

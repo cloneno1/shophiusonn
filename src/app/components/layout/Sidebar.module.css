@@ -1,0 +1,137 @@
+.sidebar {
+  width: 280px;
+  background-color: #0d0d12;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 0.75rem;
+  transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+.logoArea {
+  padding: 0 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logoName {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.25rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #555;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0 1rem 0.75rem;
+}
+
+.navGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  color: #999;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.navItemContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+}
+
+.navItem.active {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.navItem.activeIcon {
+  color: var(--color-primary);
+}
+
+.chevron {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
+.discordButton {
+  margin-top: auto;
+  background: rgba(88, 101, 242, 0.1);
+  color: #5865F2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.discordButton:hover {
+  background: rgba(88, 101, 242, 0.2);
+}
+
+/* Mobile responsive styles */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+}
+
+@media (min-width: 901px) {
+  .sidebar {
+    transform: translateX(0);
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .overlayActive {
+    display: block;
+  }
+}

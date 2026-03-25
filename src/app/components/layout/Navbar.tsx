@@ -3,9 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import { Menu } from 'lucide-react';
 import styles from './Navbar.module.css';
 
-export default function Navbar() {
+interface NavbarProps {
+  onMenuClick?: () => void;
+}
+
+export default function Navbar({ onMenuClick }: NavbarProps) {
   const { data: session } = useSession();
   const [links, setLinks] = useState({
     linkFacebook: '',
@@ -29,10 +34,16 @@ export default function Navbar() {
   return (
     <header className={`${styles.header} glass-panel`}>
       <div className={`container ${styles.navContainer}`}>
-        <Link href="/" className={styles.logo}>
-          Shop <span className="text-gradient">Hiusonn</span>
-        </Link>
-        <nav className={styles.navLinks}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <button className={styles.menuButton} onClick={onMenuClick}>
+            <Menu size={24} />
+          </button>
+          <Link href="/" className={styles.logo}>
+            Shop <span className="text-gradient">Hiusonn</span>
+          </Link>
+        </div>
+        
+        <nav className={`${styles.navLinks} md-visible`}>
           <Link href="/robux/gamepass" className={styles.navLink}>Mua Robux Gamepass</Link>
           <Link href="/robux/group" className={styles.navLink}>Mua Robux Group</Link>
           <Link href="/premium" className={styles.navLink}>Thuê Premium</Link>
@@ -51,18 +62,19 @@ export default function Navbar() {
           {session ? (
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               {session.user?.role === 'admin' && (
-                <Link href="/admin" className="btn btn-primary" style={{ background: '#ef4444' }}>
+                <Link href="/admin" className="btn btn-primary md-visible" style={{ background: '#ef4444' }}>
                   Admin
                 </Link>
               )}
               <Link href="/dashboard" className="btn btn-secondary">
-                Hi, {session.user?.name}
+                <span className="md-visible">Hi, {session.user?.name}</span>
+                <span className="md-hidden">Cá nhân</span>
               </Link>
             </div>
           ) : (
             <>
               <Link href="/login" className="btn btn-secondary">Đăng Nhập</Link>
-              <Link href="/register" className="btn btn-primary">Đăng Ký</Link>
+              <Link href="/register" className="btn btn-primary md-visible">Đăng Ký</Link>
             </>
           )}
         </div>

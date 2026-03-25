@@ -57,6 +57,45 @@
   gap: var(--space-md);
 }
 
+.menuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+@media (min-width: 901px) {
+  .menuButton {
+    display: none;
+  }
+}
+
+:global(.md-hidden) {
+  display: none !important;
+}
+
+:global(.md-visible) {
+  display: flex !important;
+}
+
+@media (max-width: 900px) {
+  :global(.md-hidden) {
+    display: flex !important;
+  }
+  
+  :global(.md-visible) {
+    display: none !important;
+  }
+  
+  .navLinks {
+    display: none !important;
+  }
+}
+
 .dropdown {
   position: relative;
   display: inline-block;
@@ -82,7 +121,6 @@
   padding-top: 0.8rem;
 }
 
-/* Cầu nối để không bị mất hover khi di chuyển chuột xuống menu */
 .dropdownContent::before {
   content: '';
   position: absolute;
@@ -97,7 +135,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-top: 10px; /* Thêm lại khoảng cách nhưng có cầu nối ::before che đi */
+  margin-top: 10px;
 }
 
 .dropdownItem {
@@ -115,10 +153,4 @@
   background: rgba(239, 68, 68, 0.1);
   color: var(--color-primary);
   padding-left: 1.5rem;
-}
-
-@media (max-width: 768px) {
-  .navLinks {
-    display: none; /* simple mobile hide for now */
-  }
 }

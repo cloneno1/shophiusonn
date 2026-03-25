@@ -116,6 +116,19 @@ img {
   padding: 0 var(--space-md);
 }
 
+@media (min-width: 1200px) {
+  .main-content .container {
+    max-width: 1400px; /* Slightly wider since there's a sidebar now */
+  }
+}
+
+@media (min-width: 901px) {
+  .main-content {
+    padding-left: 280px;
+    width: 100%;
+  }
+}
+
 /* Glassmorphism Class */
 .glass-panel {
   background: var(--glass-bg);

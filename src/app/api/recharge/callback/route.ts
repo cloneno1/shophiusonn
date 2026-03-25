@@ -36,62 +36,72 @@ async function handleCallback(req: Request) {
       }
     }
 
-    console.log('Gachthe1s Callback Data:', data);
+    console.log('Gachthe1s Callback Received Data:', JSON.stringify(data, null, 2));
 
-    const partnerKey = process.env.TSR_PARTNER_KEY || '';
-    
-    // Thu thập các thông tin từ dữ liệu trả về của Gachthe1s V2
-    const tsrStatus = data.status;
-    const code = data.code;
-    const serial = data.serial;
-    const amount = data.amount; // Mệnh giá thực nhận (đã trừ phí/phạt)
-    const declaredValue = data.declared_value; // Mệnh giá khai báo
-    const tsrRequestId = data.request_id;
-    const value = data.value; // Mệnh giá thực của thẻ
+    const status_code = data.status;
+    const request_id = data.request_id || data.requestId || data.content;
+    const amount = data.amount; // Real amount received after fees
+    const declaredValue = data.declared_value;
+    const value = data.value; // Real card value
 
-    // Số tiền thực nhận: Lấy ưu tiên `amount` > `value` > `declared_value`
-    const realAmount = amount || value || declaredValue || 0;
+    if (!request_id) {
+      console.error('Callback missing request_id');
+      return NextResponse.json({ message: 'Missing request_id' }, { status: 400 });
+    }
+
+    // realAmount logic: Gachthe1s V2 uses 'amount' for the balance to add
+    // If amount is not present, use value (though amount is usually better as it handles fines)
+    const realAmount = Number(amount) || Number(value) || Number(declaredValue) || 0;
 
     await connectDB();
-    const transaction = await Transaction.findOne({ requestId: tsrRequestId });
+    // Use flexible query for requestId
+    const transaction = await Transaction.findOne({ 
+      $or: [{ requestId: request_id }, { requestId: String(request_id) }] 
+    });
 
-    if (transaction && transaction.status === 'Pending') {
-      if (Number(tsrStatus) === 1) { // 1: Thẻ thành công, đúng mệnh giá
+    if (!transaction) {
+      console.error(`Transaction not found for request_id: ${request_id}`);
+      return NextResponse.json({ message: 'Transaction not found' }, { status: 404 });
+    }
+
+    console.log(`Processing transaction ${transaction._id} for user ${transaction.username}. Current status: ${transaction.status}`);
+
+    if (transaction.status === 'Pending') {
+      const tsrStatus = Number(status_code);
+      
+      if (tsrStatus === 1 || tsrStatus === 2) { 
+        // 1: Success, 2: Success with wrong declared amount
         transaction.status = 'Success';
-        transaction.amount = Number(realAmount) || transaction.amount;
+        transaction.amount = realAmount || transaction.amount;
         await transaction.save();
 
         // Cộng tiền cho User
         const user = await User.findOne({ username: transaction.username });
         if (user) {
-          user.balance = (user.balance || 0) + Number(realAmount);
+          const oldBalance = user.balance || 0;
+          user.balance = oldBalance + realAmount;
           await user.save();
+          console.log(`Successfully added ${realAmount} to user ${user.username}. Old: ${oldBalance}, New: ${user.balance}`);
+        } else {
+          console.error(`User ${transaction.username} not found for transaction ${transaction._id}`);
         }
-      } else if (Number(tsrStatus) === 2) { // 2: Sai mệnh giá (vẫn thành công nhưng bị phạt lệch giá)
-        transaction.status = 'Success'; 
-        transaction.amount = Number(realAmount) || transaction.amount; 
-        await transaction.save();
-
-        const user = await User.findOne({ username: transaction.username });
-        if (user) {
-          user.balance = (user.balance || 0) + Number(realAmount);
-          await user.save();
-        }
-      } else if (Number(tsrStatus) === 3 || Number(tsrStatus) === 4) {
-        // 3: Thẻ lỗi, 4: Bảo trì
+      } else if (tsrStatus === 3 || tsrStatus === 4) {
+        // 3: Failed, 4: Maintenance
         transaction.status = 'Failed'; 
+        transaction.adminNote = 'Thẻ lỗi hoặc sai thông tin từ nhà mạng';
         await transaction.save();
-      } else if (Number(tsrStatus) !== 99) {
-        // 99 là đang xử lý thì không làm gì, đối với các mã lỗi khác đánh là failed
+      } else if (tsrStatus !== 99) {
         transaction.status = 'Failed';
         await transaction.save();
       }
+    } else {
+      console.log(`Transaction ${transaction._id} is already processed with status: ${transaction.status}`);
     }
 
     return NextResponse.json({ message: 'Success' }, { status: 200 });
   } catch (error) {
     console.error('Gachthe1s Callback Error:', error);
-    return NextResponse.json({ message: 'Error' }, { status: 500 });
+    return NextResponse.json({ message: 'Internal Error' }, { status: 500 });
   }
 }
 
