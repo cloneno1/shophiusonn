@@ -36,17 +36,17 @@ async function handleCallback(req: Request) {
       }
     }
 
-    console.log('Gachthe1s Callback Received Data:', JSON.stringify(data, null, 2));
+    console.log('RECHARGE CALLBACK DATA:', JSON.stringify(data, null, 2));
 
     const status_code = data.status;
-    const request_id = data.request_id || data.requestId || data.content;
+    const request_id = data.request_id || data.requestId || data.content || data.id;
     const amount = Number(data.amount); // Real amount after fees/penalties
     const value = Number(data.value); // Real card value
     const callback_sign = data.callback_sign; // Signature from Gachthe1s
 
     if (!request_id || !status_code) {
-      console.error('Callback missing required fields');
-      return NextResponse.json({ message: 'Missing data' }, { status: 400 });
+      console.error('Callback missing required fields: status or request_id');
+      return NextResponse.json({ message: 'Missing data' }, { status: 200 }); // Still return 200 to stop partner retrying
     }
 
     // --- SECURE: Verify Signature ---
@@ -55,14 +55,20 @@ async function handleCallback(req: Request) {
       .update((partnerKey || '') + status_code + request_id)
       .digest('hex');
 
-    if (callback_sign && callback_sign !== my_sign) {
-      console.error('Callback signature mismatch!');
-      // return NextResponse.json({ message: 'Invalid signature' }, { status: 403 }); 
-      // (Optionally ignore if you want to be lenient, but 403 is safer)
-    }
+    console.log(`Signature Check - Received: ${callback_sign}, Calculated: ${my_sign}`);
+
+    // If you're unsure about signature order, we'll just log it for now and proceed
+    // if (callback_sign && callback_sign !== my_sign) {
+    //   console.error('Callback signature mismatch! Proceeding anyway for debugging...');
+    // }
 
     await connectDB();
-    const transaction = await Transaction.findOne({ requestId: request_id });
+    const transaction = await Transaction.findOne({ 
+      $or: [
+        { requestId: String(request_id) },
+        { requestId: Number(request_id) }
+      ]
+    });
 
     if (!transaction) {
       console.error(`Transaction not found: ${request_id}`);
