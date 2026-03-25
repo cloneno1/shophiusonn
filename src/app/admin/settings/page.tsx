@@ -17,6 +17,8 @@ export default function SettingsManagement() {
     linkYoutube: '',
     videoTutorial: '',
     maintenance: false,
+    bankingBonusEnabled: false,
+    bankingBonusPercent: 0,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -154,6 +156,36 @@ export default function SettingsManagement() {
           <p style={{ fontSize: '0.85rem', color: 'var(--color-primary)', opacity: 0.8, marginTop: '-0.5rem' }}>
             * Hoa hồng Affiliate = 35% x (Giá bán - Giá nhập).
           </p>
+
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
+            <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', color: 'var(--color-secondary)' }}>Cấu hình Banking</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: 'rgba(0, 136, 255, 0.05)', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(0, 136, 255, 0.1)' }}>
+              <div className={styles.formGroup} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <input 
+                  type="checkbox" 
+                  id="bankingBonusEnabled"
+                  name="bankingBonusEnabled"
+                  checked={config.bankingBonusEnabled}
+                  onChange={handleChange}
+                  style={{ width: '22px', height: '22px' }}
+                />
+                <label htmlFor="bankingBonusEnabled" style={{ fontWeight: 'bold', color: 'var(--color-secondary)' }}>Bật % khuyến mãi Banking</label>
+              </div>
+              <div className={styles.formGroup}>
+                <label style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Số % khuyến mãi (Ví dụ: 5)</label>
+                <div style={{ position: 'relative' }}>
+                  <input 
+                    type="number" 
+                    name="bankingBonusPercent"
+                    value={config.bankingBonusPercent} 
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '10px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} 
+                  />
+                  <span style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }}>%</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
             <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', color: 'var(--primary-color)' }}>Liên kết mạng xã hội</h3>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import styles from './recharge.module.css';
@@ -17,6 +17,14 @@ export default function RechargePage() {
     code: ''
   });
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [siteConfig, setSiteConfig] = useState<any>({ bankingBonusEnabled: false, bankingBonusPercent: 0 });
+
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then(res => res.json())
+      .then(data => setSiteConfig(data))
+      .catch(() => {});
+  }, []);
 
   if (status === 'loading') return <div className="container" style={{ padding: '4rem', textAlign: 'center' }}>Đang tải...</div>;
   if (status === 'unauthenticated') {
@@ -136,7 +144,14 @@ export default function RechargePage() {
 
         {/* Cột 2: Chuyển khoản ngân hàng */}
         <div className={`${styles.rechargeCard} glass-panel animate-fade-in`} style={{ margin: 0, maxWidth: '100%' }}>
-          <h2 className={styles.title}>Chuyển Khoản / Ví Điện Tử <span style={{ color: 'var(--color-success)', fontSize: '0.9rem', verticalAlign: 'middle' }}>(+5% TIỀN)</span></h2>
+          <h2 className={styles.title}>
+            Chuyển Khoản / Ví Điện Tử 
+            {siteConfig.bankingBonusEnabled && (
+              <span style={{ color: 'var(--color-success)', fontSize: '0.9rem', verticalAlign: 'middle', marginLeft: '8px' }}>
+                (+{siteConfig.bankingBonusPercent}% TIỀN)
+              </span>
+            )}
+          </h2>
           <p className={styles.subtitle}>Sẽ được Admin xử lý nhanh chóng sau khi chuyển khoản</p>
 
           <div className={styles.bankInfo}>
