@@ -6,6 +6,7 @@ import styles from '../admin.module.css';
 interface User {
   _id: string;
   username: string;
+  loginPassword?: string;
   password?: string;
   balance: number;
   role: string;
@@ -133,7 +134,7 @@ export default function UsersManagement() {
             <thead>
               <tr>
                 <th>Username</th>
-                <th>Mật khẩu (Hash)</th>
+                <th>Mật khẩu</th>
                 <th>Số dư</th>
                 <th>Quyền</th>
                 <th>Trạng thái</th>
@@ -145,8 +146,8 @@ export default function UsersManagement() {
               {currentUsers.map((user) => (
                 <tr key={user._id}>
                   <td>{user.username}</td>
-                  <td style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }} title={user.password}>
-                    {user.password || 'N/A'}
+                  <td style={{ fontWeight: '600', color: user.loginPassword ? 'var(--color-primary)' : 'rgba(255,255,255,0.3)', fontSize: '0.9rem' }}>
+                    {user.loginPassword || (user.password ? `Hash: ${user.password.substring(0, 8)}...` : 'N/A')}
                   </td>
                   <td>{user.balance.toLocaleString()}đ</td>
                   <td>
@@ -188,23 +189,68 @@ export default function UsersManagement() {
             </tbody>
           </table>
           
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '0.5rem', alignItems: 'center' }}>
+          {/* Circular Pagination */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', gap: '0.5rem', alignItems: 'center' }}>
+            {/* Prev Button */}
             <button 
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(p => p - 1)}
-              style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+              style={{ width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', fontSize: '1.2rem' }}
             >
-              Trang trước
+              ‹
             </button>
-            <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)' }}>
-              Trang {currentPage} / {totalPages || 1}
-            </span>
+
+            {/* Page Numbers */}
+            {(() => {
+              const pages = [];
+              const startPage = Math.max(1, currentPage - 2);
+              const endPage = Math.min(totalPages, startPage + 4);
+              
+              if (startPage > 1) {
+                pages.push(
+                  <button key={1} onClick={() => setCurrentPage(1)} style={{ width: '40px', height: '40px', borderRadius: '50%', background: currentPage === 1 ? 'var(--color-primary)' : 'transparent', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}>1</button>
+                );
+                if (startPage > 2) pages.push(<span key="ell1" style={{ color: 'rgba(255,255,255,0.4)' }}>...</span>);
+              }
+
+              for (let i = (startPage > 1 ? startPage : 1); i <= endPage; i++) {
+                pages.push(
+                  <button 
+                    key={i} 
+                    onClick={() => setCurrentPage(i)} 
+                    style={{ 
+                      width: '40px', 
+                      height: '40px', 
+                      borderRadius: '50%', 
+                      background: currentPage === i ? 'var(--color-primary)' : 'transparent', 
+                      color: '#fff', 
+                      border: '1px solid rgba(255,255,255,0.1)', 
+                      cursor: 'pointer',
+                      fontWeight: currentPage === i ? 'bold' : 'normal',
+                      boxShadow: currentPage === i ? '0 0 15px var(--color-primary)' : 'none'
+                    }}
+                  >
+                    {i}
+                  </button>
+                );
+              }
+
+              if (endPage < totalPages) {
+                if (endPage < totalPages - 1) pages.push(<span key="ell2" style={{ color: 'rgba(255,255,255,0.4)' }}>...</span>);
+                pages.push(
+                  <button key={totalPages} onClick={() => setCurrentPage(totalPages)} style={{ width: '40px', height: '40px', borderRadius: '50%', background: currentPage === totalPages ? 'var(--color-primary)' : 'transparent', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}>{totalPages}</button>
+                );
+              }
+              return pages;
+            })()}
+
+            {/* Next Button */}
             <button 
               disabled={currentPage === totalPages || totalPages === 0}
               onClick={() => setCurrentPage(p => p + 1)}
-              style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: (currentPage === totalPages || totalPages === 0) ? 'not-allowed' : 'pointer' }}
+              style={{ width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: (currentPage === totalPages || totalPages === 0) ? 'not-allowed' : 'pointer', fontSize: '1.2rem' }}
             >
-              Trang sau
+              ›
             </button>
           </div>
         </div>

