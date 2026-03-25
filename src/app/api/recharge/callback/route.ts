@@ -9,30 +9,31 @@ async function handleCallback(req: Request) {
     let data: Record<string, any> = {};
     const url = new URL(req.url);
 
-    // 1. Phân tích tham số tùy theo phương thức GET hoặc POST
-    if (req.method === 'GET') {
-      url.searchParams.forEach((value, key) => {
-        data[key] = value;
-      });
-    } else if (req.method === 'POST') {
+    // 1. Phân tích tham số từ URL (luôn có thể có)
+    url.searchParams.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    // 2. Phân tích tham số từ Body (nếu là POST)
+    if (req.method === 'POST') {
       const contentType = req.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
-        data = await req.json();
-      } else if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
-        const formData = await req.formData();
-        formData.forEach((value, key) => {
-          data[key] = value.toString();
-        });
-      } else {
-        // Fallback cho định dạng khác
-        const text = await req.text();
-        try {
-          data = JSON.parse(text);
-        } catch {
-          new URLSearchParams(text).forEach((value, key) => {
-            data[key] = value;
+      try {
+        if (contentType.includes('application/json')) {
+          const bodyJson = await req.json();
+          data = { ...data, ...bodyJson };
+        } else if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
+          const formData = await req.formData();
+          formData.forEach((value, key) => {
+            data[key] = value.toString();
           });
+        } else {
+          const text = await req.text();
+          try {
+            data = { ...data, ...JSON.parse(text) };
+          } catch (e) {}
         }
+      } catch (err) {
+        console.warn('Error reading callback body:', err);
       }
     }
 
@@ -45,19 +46,22 @@ async function handleCallback(req: Request) {
     const callback_sign = data.callback_sign;
 
     if (!request_id) {
+      console.error('Missing request_id in callback data');
       return NextResponse.json({ message: 'Missing request_id' }, { status: 200 });
     }
 
     await connectDB();
+    
+    // Tìm kiếm linh hoạt hơn dùng Regex để tránh các lỗi khoảng trắng hoặc kiểu dữ liệu
     const transaction = await Transaction.findOne({ 
-      $or: [
-        { requestId: String(request_id) },
-        { requestId: Number(request_id) }
-      ]
+      requestId: { $regex: new RegExp(`^${request_id.toString().trim()}$`, 'i') }
     });
 
     if (!transaction) {
-      console.error(`Transaction not found: ${request_id}`);
+      console.error(`Transaction not found: ${request_id}. Pending IDs in DB:`);
+      // Ghi thêm log hỗ trợ để debug
+      const list = await Transaction.find({ status: 'Pending' }).limit(5).select('requestId').lean();
+      console.log('Current Pending IDs:', list.map(t => t.requestId).join(', '));
       return NextResponse.json({ message: 'Not found' }, { status: 200 });
     }
 
