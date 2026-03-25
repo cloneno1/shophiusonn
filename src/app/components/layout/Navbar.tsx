@@ -33,8 +33,8 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
 
   return (
     <header className={`${styles.header} glass-panel`}>
-      <div className={`container ${styles.navContainer}`}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <div className={styles.navContainer}>
+        <div className={styles.brandSection}>
           <button className={styles.menuButton} onClick={onMenuClick}>
             <Menu size={24} />
           </button>

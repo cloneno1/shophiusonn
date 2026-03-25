@@ -3,6 +3,16 @@
   align-items: center;
   justify-content: space-between;
   height: 70px;
+  width: 100%;
+  padding: 0 1rem; /* Match Sidebar logoArea padding */
+}
+
+.brandSection {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 25%;
+  min-width: 280px; /* Exact match with sidebar width */
 }
 
 .header {
@@ -12,7 +22,7 @@
   right: 0;
   z-index: 1100;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(5, 5, 8, 0.8) !important;
+  background: rgba(5, 5, 8, 0.9) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
 }
@@ -29,7 +39,9 @@
 
 .navLinks {
   display: flex;
-  gap: var(--space-xl);
+  gap: 2rem;
+  justify-content: center;
+  flex: 1;
 }
 
 .navLink {
@@ -60,6 +72,9 @@
 .authActions {
   display: flex;
   gap: var(--space-md);
+  width: 25%;
+  min-width: 280px;
+  justify-content: flex-end;
 }
 
 .menuButton {
