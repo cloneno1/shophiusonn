@@ -60,21 +60,21 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
         </nav>
         <div className={styles.authActions}>
           {session ? (
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
               {session.user?.role === 'admin' && (
-                <Link href="/admin" className="btn btn-primary md-visible" style={{ background: '#ef4444' }}>
+                <Link href="/admin" className="btn btn-secondary md-visible" style={{ color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)' }}>
                   Admin
                 </Link>
               )}
-              <Link href="/dashboard" className="btn btn-secondary">
+              <Link href="/dashboard" className="btn btn-primary" style={{ padding: '0.6rem 1.2rem' }}>
                 <span className="md-visible">Hi, {session.user?.name}</span>
                 <span className="md-hidden">Cá nhân</span>
               </Link>
             </div>
           ) : (
             <>
-              <Link href="/login" className="btn btn-secondary">Đăng Nhập</Link>
-              <Link href="/register" className="btn btn-primary md-visible">Đăng Ký</Link>
+              <Link href="/login" className="btn btn-secondary" style={{ padding: '0.6rem 1.2rem' }}>Đăng Nhập</Link>
+              <Link href="/register" className="btn btn-primary md-visible" style={{ padding: '0.6rem 1.2rem' }}>Đăng Ký</Link>
             </>
           )}
         </div>

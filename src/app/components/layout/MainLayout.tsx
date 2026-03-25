@@ -6,15 +6,12 @@ import Sidebar from './Sidebar';
 import Footer from './Footer';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     const checkIsDesktop = () => {
       setIsDesktop(window.innerWidth > 900);
-      if (window.innerWidth <= 900) {
-        setIsSidebarOpen(false);
-      }
     };
     
     checkIsDesktop();
@@ -28,7 +25,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#050505' }}>
       <Navbar onMenuClick={toggleSidebar} />
-      <div style={{ display: 'flex', flex: 1, paddingTop: '80px' }}>
+      <div style={{ display: 'flex', flex: 1, paddingTop: '70px' }}>
         <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
         <main 
           className="main-content" 
@@ -37,7 +34,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             transition: 'all 0.3s ease-in-out',
             marginLeft: isDesktop && isSidebarOpen ? '280px' : '0',
             width: '100%',
-            minHeight: 'calc(100vh - 80px)'
+            minHeight: 'calc(100vh - 70px)'
           }}
         >
           {children}
