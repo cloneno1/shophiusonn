@@ -38,29 +38,15 @@ async function handleCallback(req: Request) {
 
     console.log('RECHARGE CALLBACK DATA:', JSON.stringify(data, null, 2));
 
-    const status_code = data.status;
+    const status_code = data.status || data.status_code;
     const request_id = data.request_id || data.requestId || data.content || data.id;
-    const amount = Number(data.amount); // Real amount after fees/penalties
-    const value = Number(data.value); // Real card value
-    const callback_sign = data.callback_sign; // Signature from Gachthe1s
+    const amount_received = Number(data.amount || data.value_receive || 0); 
+    const card_value = Number(data.value || data.declared_value || 0);
+    const callback_sign = data.callback_sign;
 
-    if (!request_id || !status_code) {
-      console.error('Callback missing required fields: status or request_id');
-      return NextResponse.json({ message: 'Missing data' }, { status: 200 }); // Still return 200 to stop partner retrying
+    if (!request_id) {
+      return NextResponse.json({ message: 'Missing request_id' }, { status: 200 });
     }
-
-    // --- SECURE: Verify Signature ---
-    const partnerKey = process.env.TSR_PARTNER_KEY;
-    const my_sign = crypto.createHash('md5')
-      .update((partnerKey || '') + status_code + request_id)
-      .digest('hex');
-
-    console.log(`Signature Check - Received: ${callback_sign}, Calculated: ${my_sign}`);
-
-    // If you're unsure about signature order, we'll just log it for now and proceed
-    // if (callback_sign && callback_sign !== my_sign) {
-    //   console.error('Callback signature mismatch! Proceeding anyway for debugging...');
-    // }
 
     await connectDB();
     const transaction = await Transaction.findOne({ 
@@ -72,34 +58,44 @@ async function handleCallback(req: Request) {
 
     if (!transaction) {
       console.error(`Transaction not found: ${request_id}`);
-      return NextResponse.json({ message: 'Not found' }, { status: 404 });
+      return NextResponse.json({ message: 'Not found' }, { status: 200 });
     }
 
+    // --- DEBUG: Save raw data to adminNote so we can see it in UI ---
+    transaction.adminNote = `CB: st=${status_code}, am=${amount_received}, val=${card_value}`;
+    
     if (transaction.status === 'Pending') {
       const gStatus = Number(status_code);
       
+      // Gachthe1s: 1 is success, 2 is success wrong amount
       if (gStatus === 1 || gStatus === 2) { 
-        // 1: Success, 2: Success with wrong declared amount
         transaction.status = 'Success';
-        transaction.receivedAmount = amount || value || (transaction.amount * 0.82); // estimate if missing
+        // Use amount_received if present, otherwise calculate from card_value or original amount
+        const finalAmount = amount_received || (card_value * 0.83) || (transaction.amount * 0.83);
+        transaction.receivedAmount = finalAmount;
         
         if (gStatus === 2) {
-          transaction.adminNote = 'Nạp sai mệnh giá, đã cộng tiền chiết khấu thực tế';
+          transaction.adminNote += ' (Nạp sai mệnh giá)';
         }
         await transaction.save();
 
         const user = await User.findOne({ username: transaction.username });
         if (user) {
-          user.balance = (user.balance || 0) + (transaction.receivedAmount || 0);
+          user.balance = (user.balance || 0) + finalAmount;
           await user.save();
-          console.log(`Updated balance for ${user.username}: +${transaction.receivedAmount}`);
+          console.log(`Updated balance for ${user.username}: +${finalAmount}`);
         }
-      } else {
-        // Failed or other error
+      } else if (gStatus === 3 || gStatus === 4 || gStatus === 100) {
+        // Failed
         transaction.status = 'Failed';
-        transaction.adminNote = data.message || 'Thẻ lỗi hoặc bị từ chối';
+        transaction.adminNote += ' (Thẻ lỗi/Từ chối)';
         await transaction.save();
+      } else {
+         // Still pending or other code
+         await transaction.save();
       }
+    } else {
+      await transaction.save();
     }
 
     return NextResponse.json({ message: 'Success' }, { status: 200 });
