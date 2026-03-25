@@ -20,6 +20,8 @@ interface Transaction {
 export default function TransactionsManagement() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchTransactions();
@@ -56,6 +58,9 @@ export default function TransactionsManagement() {
     }
   };
 
+  const totalPages = Math.ceil(transactions.length / itemsPerPage);
+  const currentTransactions = transactions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <div>
       <header className={styles.header}>
@@ -81,7 +86,7 @@ export default function TransactionsManagement() {
                 </tr>
               </thead>
               <tbody>
-                {transactions.map((tx) => (
+                {currentTransactions.map((tx) => (
                   <tr key={tx._id}>
                     <td>{tx.username}</td>
                     <td>
@@ -147,6 +152,54 @@ export default function TransactionsManagement() {
                 ))}
               </tbody>
             </table>
+
+            {/* Circular Pagination Controls */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', gap: '0.5rem', alignItems: 'center' }}>
+              <button 
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(p => p - 1)}
+                style={{ width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', fontSize: '1.2rem' }}
+              >
+                ‹
+              </button>
+
+              {(() => {
+                const pages = [];
+                const startPage = Math.max(1, currentPage - 2);
+                const endPage = Math.min(totalPages, startPage + 4);
+                
+                if (startPage > 1) {
+                  pages.push(
+                    <button key={1} onClick={() => setCurrentPage(1)} style={{ width: '40px', height: '40px', borderRadius: '50%', background: currentPage === 1 ? 'var(--color-primary)' : 'transparent', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}>1</button>
+                  );
+                  if (startPage > 2) pages.push(<span key="ell1" style={{ color: 'rgba(255,255,255,0.4)' }}>...</span>);
+                }
+
+                for (let i = (startPage > 1 ? startPage : 1); i <= endPage; i++) {
+                  pages.push(
+                    <button key={i} onClick={() => setCurrentPage(i)} style={{ width: '40px', height: '40px', borderRadius: '50%', background: currentPage === i ? 'var(--color-primary)' : 'transparent', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', fontWeight: currentPage === i ? 'bold' : 'normal', boxShadow: currentPage === i ? '0 0 15px var(--color-primary)' : 'none' }}>
+                      {i}
+                    </button>
+                  );
+                }
+
+                if (endPage < totalPages) {
+                  if (endPage < totalPages - 1) pages.push(<span key="ell2" style={{ color: 'rgba(255,255,255,0.4)' }}>...</span>);
+                  pages.push(
+                    <button key={totalPages} onClick={() => setCurrentPage(totalPages)} style={{ width: '40px', height: '40px', borderRadius: '50%', background: currentPage === totalPages ? 'var(--color-primary)' : 'transparent', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}>{totalPages}</button>
+                  );
+                }
+                return pages;
+              })()}
+
+              <button 
+                disabled={currentPage === totalPages || totalPages === 0}
+                onClick={() => setCurrentPage(p => p + 1)}
+                style={{ width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: (currentPage === totalPages || totalPages === 0) ? 'not-allowed' : 'pointer', fontSize: '1.2rem' }}
+              >
+                ›
+              </button>
+            </div>
           </div>
         )}
       </div>
