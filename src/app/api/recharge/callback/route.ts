@@ -50,18 +50,23 @@ async function handleCallback(req: Request) {
       return NextResponse.json({ message: 'Missing request_id' }, { status: 200 });
     }
 
-    await connectDB();
+    const db = await connectDB();
     
+    // DEBUG: Kiểm tra tên Database và tồng số record hiện có
+    const dbName = db.connection?.name || 'unknown';
+    const totalCount = await Transaction.countDocuments();
+    console.log(`Callback DB Info: Name=${dbName}, Total Transactions=${totalCount}`);
+
     // Tìm kiếm linh hoạt hơn dùng Regex để tránh các lỗi khoảng trắng hoặc kiểu dữ liệu
     const transaction = await Transaction.findOne({ 
       requestId: { $regex: new RegExp(`^${request_id.toString().trim()}$`, 'i') }
     });
 
     if (!transaction) {
-      console.error(`Transaction not found: ${request_id}. Pending IDs in DB:`);
-      // Ghi thêm log hỗ trợ để debug
-      const list = await Transaction.find({ status: 'Pending' }).limit(5).select('requestId').lean();
-      console.log('Current Pending IDs:', list.map(t => t.requestId).join(', '));
+      console.error(`Transaction not found: ${request_id}. DB Name: ${dbName}, Total DB: ${totalCount}`);
+      // Ghi thêm log hỗ trợ để debug các giao dịch gần đây
+      const recent = await Transaction.find().sort({ createdAt: -1 }).limit(5).select('requestId status').lean();
+      console.log('Recent 5 IDs in DB:', recent.map((t: any) => `[ID:${t.requestId}, Stat:${t.status}]`).join(' | '));
       return NextResponse.json({ message: 'Not found' }, { status: 200 });
     }
 
