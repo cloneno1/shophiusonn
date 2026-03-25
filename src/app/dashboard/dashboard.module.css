@@ -82,6 +82,11 @@
   background-color: rgba(255, 23, 68, 0.1);
 }
 
+.mainContent {
+  min-width: 0;
+  width: 100%;
+}
+
 .header {
   padding: var(--space-md) var(--space-lg);
   margin-bottom: var(--space-md);
@@ -94,10 +99,12 @@
 
 .tableContainer {
   width: 100%;
+  max-width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-lg);
   margin-bottom: var(--space-md);
+  min-width: 0; /* Important for grid children scroll */
 }
 
 .table {
@@ -169,7 +176,8 @@
   .dashboardContainer {
     grid-template-columns: 1fr;
     min-width: 0;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Prevent body scroll */
+    padding-top: var(--space-xl);
   }
 }
 
