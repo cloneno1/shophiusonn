@@ -168,6 +168,8 @@
 @media (max-width: 900px) {
   .dashboardContainer {
     grid-template-columns: 1fr;
+    min-width: 0;
+    overflow-x: hidden;
   }
 }
 
