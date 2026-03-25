@@ -13,16 +13,14 @@ export async function GET() {
     }
 
     await connectDB();
+    const username = session.user.name;
+    const userId = session.user.id;
 
-    // Fetch nạp thẻ (recharge)
-    const cardTransactions = await Transaction.find({ username: session.user.name })
-      .sort({ createdAt: -1 })
-      .lean();
-
-    // Fetch Robux/Premium orders
-    const robuxOrders = await Order.find({ userId: session.user.id })
-      .sort({ createdAt: -1 })
-      .lean();
+    // Fetch nạp thẻ và đơn hàng Robux song song để tăng tốc độ load
+    const [cardTransactions, robuxOrders] = await Promise.all([
+      Transaction.find({ username }).sort({ createdAt: -1 }).lean(),
+      Order.find({ userId }).sort({ createdAt: -1 }).lean()
+    ]);
 
     // Transform and Unify
     const allTransactions = [

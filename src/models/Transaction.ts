@@ -14,4 +14,8 @@ const TransactionSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// Thêm Index để tăng tốc độ truy vấn
+TransactionSchema.index({ username: 1, createdAt: -1 });
+TransactionSchema.index({ requestId: 1 });
+
 export default mongoose.models.Transaction || mongoose.model('Transaction', TransactionSchema);

@@ -18,4 +18,8 @@ const OrderSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// Thêm Index để tăng tốc độ truy vấn
+OrderSchema.index({ userId: 1, createdAt: -1 });
+OrderSchema.index({ username: 1 });
+
 export default mongoose.models.Order || mongoose.model('Order', OrderSchema);
