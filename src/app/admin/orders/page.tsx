@@ -17,6 +17,10 @@ interface Order {
     image?: string;
     note?: string;
   };
+  userId?: {
+    _id: string;
+    username: string;
+  };
   createdAt: string;
 }
 
@@ -24,6 +28,8 @@ export default function OrdersManagement() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
 
   useEffect(() => {
     fetchOrders();
@@ -65,6 +71,42 @@ export default function OrdersManagement() {
         <p>Theo dõi và xử lý các đơn hàng dịch vụ của khách.</p>
       </header>
 
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+        <input 
+          type="text" 
+          placeholder="Tìm tên khách hoặc shop..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ 
+            flex: 1, 
+            minWidth: '200px',
+            padding: '0.8rem 1rem', 
+            borderRadius: '10px', 
+            backgroundColor: 'rgba(255,255,255,0.03)', 
+            border: '1px solid rgba(255,255,255,0.1)',
+            color: '#fff'
+          }}
+        />
+        <select 
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          style={{ 
+            padding: '0.8rem 1rem', 
+            borderRadius: '10px', 
+            backgroundColor: 'rgba(255,255,255,0.03)', 
+            border: '1px solid rgba(255,255,255,0.1)',
+            color: '#fff',
+            minWidth: '150px'
+          }}
+        >
+          <option value="All">Tất cả trạng thái</option>
+          <option value="Pending">Chờ (Pending)</option>
+          <option value="Processing">Đang xử lý (Processing)</option>
+          <option value="Completed">Xong (Completed)</option>
+          <option value="Cancelled">Hủy (Cancelled)</option>
+        </select>
+      </div>
+
       <div className="glass-panel" style={{ padding: '1.5rem' }}>
         {loading ? (
           <p>Đang tải danh sách...</p>
@@ -74,6 +116,7 @@ export default function OrdersManagement() {
               <thead>
                 <tr>
                   <th>Khách hàng</th>
+                  <th>Tài khoản</th>
                   <th>Dịch vụ</th>
                   <th>Số lượng</th>
                   <th>Giá</th>
@@ -84,9 +127,25 @@ export default function OrdersManagement() {
                 </tr>
               </thead>
               <tbody>
-                {orders.map((order) => (
+                {orders
+                  .filter(order => {
+                    const matchesSearch = 
+                      order.username?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                      order.userId?.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      order._id?.toLowerCase().includes(searchTerm.toLowerCase());
+                    
+                    const matchesStatus = statusFilter === 'All' || order.status === statusFilter;
+                    
+                    return matchesSearch && matchesStatus;
+                  })
+                  .map((order) => (
                   <tr key={order._id}>
                     <td>{order.username}</td>
+                    <td>
+                      <span style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>
+                        {order.userId?.username || 'Gia khách'}
+                      </span>
+                    </td>
                     <td style={{ textTransform: 'capitalize' }}>{order.type}</td>
                     <td>{order.amount.toLocaleString()} R$</td>
                     <td>{order.price.toLocaleString()}đ</td>

@@ -13,7 +13,7 @@ export async function GET() {
     }
 
     await connectDB();
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const orders = await Order.find().populate('userId', 'username').sort({ createdAt: -1 });
 
     return NextResponse.json(orders);
   } catch (error) {
