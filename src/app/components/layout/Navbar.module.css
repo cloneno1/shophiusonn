@@ -11,8 +11,15 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  width: 25%;
-  min-width: 280px; /* Exact match with sidebar width */
+  width: auto;
+  min-width: 0;
+}
+
+@media (min-width: 900px) {
+  .brandSection {
+    width: 25%;
+    min-width: 280px; 
+  }
 }
 
 .header {

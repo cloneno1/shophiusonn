@@ -146,7 +146,14 @@ img {
 }
 
 .table-responsive table {
-  min-width: 700px;
+  min-width: 900px; /* Thêm độ rộng để chắc chắn cuộn được */
+  table-layout: fixed; /* Bắt buộc break-word có tác dụng */
+}
+
+.table-responsive td, .table-responsive th {
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal !important;
 }
 
 /* Button Variants */

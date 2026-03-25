@@ -28,6 +28,15 @@
   z-index: 1;
 }
 
+@media (max-width: 500px) {
+  .authCard {
+    padding: 1.5rem 1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+}
+
 .authHeader {
   text-align: center;
   margin-bottom: var(--space-xl);
