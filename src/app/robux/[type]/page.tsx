@@ -77,8 +77,8 @@ export default function RobuxPage({ params }: { params: Promise<{ type: string }
   };
 
   const handleSubmit = async () => {
-    if (!robuxAmount || !username) {
-      alert('Vui lòng nhập đầy đủ thông tin');
+    if (!robuxAmount || robuxAmount <= 0 || !username) {
+      alert('Vui lòng nhập đầy đủ thông tin và số lượng Robux hợp lệ');
       return;
     }
 

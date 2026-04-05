@@ -6,7 +6,12 @@ import Transaction from '@/models/Transaction';
 
 export async function POST(req: Request) {
   try {
-    const { telco, code, serial, amount, username } = await req.json();
+    let { telco, code, serial, amount, username } = await req.json();
+    
+    // Trim spaces and ensure consistency
+    code = code?.trim();
+    serial = serial?.trim();
+    telco = telco?.toUpperCase();
 
     const host = req.headers.get('host');
     const protocol = req.headers.get('x-forwarded-proto') || 'https';

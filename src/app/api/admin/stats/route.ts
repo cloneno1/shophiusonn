@@ -25,13 +25,15 @@ export async function GET() {
         {
           $group: {
             _id: null,
-            totalRevenue: { $sum: "$price" }
+            totalRevenue: { $sum: "$price" },
+            totalCost: { $sum: "$cost" }
           }
         }
       ])
     ]);
-
     const totalRevenue = stats[0]?.totalRevenue || 0;
+    const totalCost = stats[0]?.totalCost || 0;
+    const totalProfit = totalRevenue - totalCost;
     
     // Total system balance
     const userStats = await User.aggregate([
@@ -48,6 +50,7 @@ export async function GET() {
       totalUsers,
       ordersToday,
       totalRevenue,
+      totalProfit,
       systemBalance,
       recentOrders
     });

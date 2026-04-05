@@ -8,6 +8,7 @@ interface StatData {
   totalUsers: number;
   ordersToday: number;
   totalRevenue: number;
+  totalProfit: number;
   systemBalance: number;
   recentOrders: any[];
 }
@@ -31,10 +32,11 @@ export default function AdminDashboard() {
   }
 
   const stats = [
-    { label: 'Tổng người dùng', value: data.totalUsers.toLocaleString() },
-    { label: 'Đơn hàng hôm nay', value: data.ordersToday.toLocaleString() },
+    { label: 'Người dùng', value: data.totalUsers.toLocaleString() },
+    { label: 'Đơn hôm nay', value: data.ordersToday.toLocaleString() },
     { label: 'Tổng doanh thu', value: data.totalRevenue.toLocaleString() + 'đ' },
-    { label: 'Số dư hệ thống', value: data.systemBalance.toLocaleString() + 'đ' },
+    { label: 'Số dư khách', value: data.systemBalance.toLocaleString() + 'đ' },
+    { label: 'Lợi nhuận (Est)', value: (data.totalProfit || 0).toLocaleString() + 'đ', color: 'var(--color-success)' },
   ];
 
   return (
@@ -47,7 +49,7 @@ export default function AdminDashboard() {
       <div className={styles.statsGrid}>
         {stats.map((stat, index) => (
           <div key={index} className={styles.statCard}>
-            <div className={styles.statValue}>{stat.value}</div>
+            <div className={styles.statValue} style={stat.color ? { color: stat.color } : {}}>{stat.value}</div>
             <div className={styles.statLabel}>{stat.label}</div>
           </div>
         ))}

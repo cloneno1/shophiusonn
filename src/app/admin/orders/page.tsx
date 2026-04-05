@@ -135,6 +135,7 @@ export default function OrdersManagement() {
             <table className={styles.adminTable}>
               <thead>
                 <tr>
+                  <th>Mã đơn</th>
                   <th>Khách hàng</th>
                   <th>Tài khoản</th>
                   <th>Dịch vụ</th>
@@ -149,6 +150,9 @@ export default function OrdersManagement() {
               <tbody>
                 {currentOrders.map((order) => (
                   <tr key={order._id}>
+                    <td style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                      #{order._id.slice(-6)}
+                    </td>
                     <td>{order.username}</td>
                     <td>
                       <span style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>

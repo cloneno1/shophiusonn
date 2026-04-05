@@ -19,6 +19,7 @@ export default function SettingsManagement() {
     maintenance: false,
     bankingBonusEnabled: false,
     bankingBonusPercent: 0,
+    discordWebhookUrl: '',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -205,6 +206,48 @@ export default function SettingsManagement() {
               <div className={styles.formGroup}>
                 <label style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>ID Video hướng dẫn (Youtube)</label>
                 <input type="text" name="videoTutorial" placeholder="Ví dụ: dQw4w9WgXcQ (Chỉ lấy mã ID cuối link)" value={config.videoTutorial} onChange={handleChange} style={{ width: '100%', padding: '10px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} />
+              </div>
+            </div>
+          </div>
+
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
+            <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', color: '#5865F2' }}>Cấu hình Discord (Thông báo)</h3>
+            <div style={{ display: 'grid', gap: '1rem' }}>
+              <div className={styles.formGroup}>
+                <label style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Discord Webhook URL</label>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                   <input 
+                    type="text" 
+                    name="discordWebhookUrl" 
+                    placeholder="https://discord.com/api/webhooks/..." 
+                    value={config.discordWebhookUrl} 
+                    onChange={handleChange} 
+                    style={{ flex: 1, padding: '10px', backgroundColor: '#0d0d12', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} 
+                   />
+                   <button 
+                    type="button" 
+                    className="btn btn-secondary" 
+                    style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}
+                    onClick={async () => {
+                      if (!config.discordWebhookUrl) return alert('Vui lòng nhập Webhook URL');
+                      try {
+                         await fetch('/api/admin/settings/test-webhook', { 
+                           method: 'POST', 
+                           headers: { 'Content-Type': 'application/json' },
+                           body: JSON.stringify({ url: config.discordWebhookUrl }) 
+                         });
+                         alert('Đã gửi tin nhắn thử nghiệm!');
+                      } catch (e) {
+                         alert('Gửi thử nghiệm thất bại');
+                      }
+                    }}
+                   >
+                     Test Webhook
+                   </button>
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '0.5rem' }}>
+                  * Hệ thống sẽ tự động gửi thông báo về Discord khi có đơn hàng mới hoặc nạp thẻ thành công.
+                </p>
               </div>
             </div>
           </div>

@@ -95,7 +95,7 @@ export default function RechargePage() {
                   value={formData.amount}
                   onChange={(e) => setFormData({...formData, amount: e.target.value})}
                 >
-                  <option value="10000">10,000 VNĐ</option>
+                  {formData.telco !== 'GARENA' && <option value="10000">10,000 VNĐ</option>}
                   <option value="20000">20,000 VNĐ</option>
                   <option value="50000">50,000 VNĐ</option>
                   <option value="100000">100,000 VNĐ</option>

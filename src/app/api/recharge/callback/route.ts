@@ -3,6 +3,7 @@ import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import Transaction from '@/models/Transaction';
 import crypto from 'crypto';
+import { sendDiscordWebhook } from '@/lib/discord';
 
 async function handleCallback(req: Request) {
   try {
@@ -102,6 +103,14 @@ async function handleCallback(req: Request) {
           user.balance = (user.balance || 0) + finalAmount;
           await user.save();
           console.log(`Updated balance for ${user.username}: +${finalAmount}`);
+
+          // Send Discord notification
+          await sendDiscordWebhook(`NẠP THẺ THÀNH CÔNG`, [
+            { name: 'Khách hàng', value: user.username, inline: true },
+            { name: 'Loại thẻ', value: transaction.telco || 'Unknown', inline: true },
+            { name: 'Mệnh giá', value: `${transaction.amount.toLocaleString()} VNĐ`, inline: true },
+            { name: 'Thực nhận', value: `${finalAmount.toLocaleString()} VNĐ`, inline: true },
+          ], 0x22c55e);
         }
       } else if (gStatus === 3 || gStatus === 4 || gStatus === 100) {
         // Failed
