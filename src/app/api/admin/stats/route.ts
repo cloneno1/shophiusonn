@@ -22,6 +22,7 @@ export async function GET() {
       }),
       Order.find().sort({ createdAt: -1 }).limit(5),
       Order.aggregate([
+        { $match: { price: { $gt: 0 }, status: { $ne: 'Cancelled' } } },
         {
           $group: {
             _id: null,

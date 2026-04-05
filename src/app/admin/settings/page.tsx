@@ -264,7 +264,28 @@ export default function SettingsManagement() {
             <label htmlFor="maintenance" style={{ color: '#ef4444', fontWeight: 'bold' }}>Chế độ bảo trì (Tắt toàn bộ dịch vụ mua hàng)</label>
           </div>
 
-          <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
+          <div style={{ marginTop: '3rem', borderTop: '2px solid rgba(239, 68, 68, 0.2)', paddingTop: '2rem' }}>
+            <h3 style={{ color: '#ef4444', marginBottom: '0.5rem' }}>Dành cho nhà phát triển</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginBottom: '1rem' }}>Xóa bỏ các đơn hàng bị bug (giá âm) phát sinh từ các phiên bản cũ.</p>
+            <button 
+              className="btn" 
+              style={{ padding: '0.8rem 2rem', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+              onClick={async () => {
+                if (!window.confirm('CẢNH BÁO: Hành động này sẽ xóa vĩnh viễn tất cả đơn hàng có mệnh giá âm (bug). Bạn có chắc chắn?')) return;
+                try {
+                  const res = await fetch('/api/admin/debug/clean-orders', { method: 'POST' });
+                  const data = await res.json();
+                  alert(data.message);
+                } catch (e) {
+                  alert('Lỗi khi dọn dẹp database');
+                }
+              }}
+            >
+              Dọn Dẹp Đơn Hàng Bug
+            </button>
+          </div>
+
+          <div style={{ marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
             <button className="btn btn-primary" style={{ padding: '0.8rem 2.5rem', minWidth: '200px' }} onClick={handleSave} disabled={saving}>
               {saving ? 'Đang lưu...' : 'Lưu tất cả cấu hình'}
             </button>
