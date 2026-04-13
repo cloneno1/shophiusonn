@@ -14,6 +14,9 @@ interface Transaction {
   price: string;
   status: string;
   adminNote?: string;
+  serial?: string;
+  code?: string;
+  telco?: string;
 }
 
 export default function DashboardPage() {
@@ -165,7 +168,23 @@ export default function DashboardPage() {
                     <tr key={tx.id + idx}>
                       <td className={styles.codeCell}>{tx.id}</td>
                       <td>{tx.date}</td>
-                      <td>{tx.service}</td>
+                      <td>
+                        <div style={{ fontWeight: '600' }}>{tx.service}</div>
+                        {(tx.serial || tx.code) && (
+                          <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '6px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                            {tx.serial && (
+                              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px', border: '1px solid var(--color-border)' }}>
+                                Seri: <code style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>{tx.serial}</code>
+                              </div>
+                            )}
+                            {tx.code && (
+                              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px', border: '1px solid var(--color-border)' }}>
+                                Mã: <code style={{ color: 'var(--color-secondary)', fontWeight: 'bold' }}>{tx.code}</code>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </td>
                       <td className={styles.amountCell}>{tx.amount}</td>
                       <td>{tx.price}</td>
                       <td>

@@ -27,11 +27,14 @@ export async function GET() {
       ...cardTransactions.map((tx: any) => ({
         id: tx.requestId || tx._id.toString(),
         date: new Date(tx.createdAt).toLocaleString('vi-VN', { hour12: false }), // Include time
-        service: `Nạp Thẻ ${tx.telco}`,
+        service: tx.method === 'bank' ? 'Nạp ATM/Banking' : `Nạp Thẻ ${tx.telco || ''}`,
         amount: `${tx.amount.toLocaleString()} đ`,
         price: `${tx.amount.toLocaleString()} VNĐ`,
         status: tx.status === 'Success' ? 'Hoàn Thành' : tx.status === 'Failed' ? 'Thất Bại' : 'Đang Xử Lý', // Map proper text statuses
-        adminNote: tx.adminNote || '' // Admin feedback
+        adminNote: tx.adminNote || '', // Admin feedback
+        telco: tx.telco,
+        serial: tx.serial,
+        code: tx.code
       })),
       ...robuxOrders.map((order: any) => ({
         id: order._id.toString().substring(0, 8).toUpperCase(),

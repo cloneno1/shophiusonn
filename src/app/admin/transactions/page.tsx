@@ -103,6 +103,15 @@ export default function TransactionsManagement() {
                         </div>
                       )}
                     </td>
+                    <td>
+                      {tx.method === 'card' ? (
+                        <div style={{ fontSize: '0.85rem' }}>
+                          <div><strong>{tx.telco}</strong></div>
+                          <div style={{ color: 'rgba(255,255,255,0.6)' }}>S: {tx.serial}</div>
+                          <div style={{ color: 'rgba(255,255,255,0.6)' }}>C: {tx.code}</div>
+                        </div>
+                      ) : '-'}
+                    </td>
                     <td>{new Date(tx.createdAt).toLocaleString('vi-VN')}</td>
                     <td>
                       <span className={`${styles.statusBadge} ${
