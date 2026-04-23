@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       .update((partnerKey || '') + code + serial)
       .digest('hex');
 
-    console.log('RECHARGE REQUEST TO GACHTHE1S:', {
+    console.log('RECHARGE REQUEST TO THESIEURE:', {
       telco,
       code,
       serial,
@@ -50,8 +50,8 @@ export async function POST(req: Request) {
     await newTransaction.save();
     console.log(`Transaction PRE-SAVED: ${requestId}`);
 
-    // 2. Gửi yêu cầu sang Gachthe1s
-    const response = await axios.get('https://gachthe1s.com/chargingws/v2', {
+    // 2. Gửi yêu cầu sang TheSieuRe
+    const response = await axios.get('https://thesieure.com/chargingws/v2', {
       params: {
         telco,
         code,
@@ -65,19 +65,20 @@ export async function POST(req: Request) {
       },
     });
 
-    console.log('GACHTHE1S RESPONSE:', JSON.stringify(response.data, null, 2));
+    console.log('THESIEURE RESPONSE:', JSON.stringify(response.data, null, 2));
 
     const status = response.data.status;
     const message = response.data.message;
 
-    // Nếu Gachthe1s trả về lỗi ngay lập tức, cập nhật trạng thái đơn (tùy chọn)
+    // Nếu TheSieuRe trả về lỗi ngay lập tức, cập nhật trạng thái đơn (tùy chọn)
     if (status !== 1 && status !== 99 && message !== 'VALID_CARD') {
        await Transaction.findOneAndUpdate({ requestId }, { status: 'Failed', adminNote: message });
     }
 
     return NextResponse.json(response.data);
   } catch (error) {
-    console.error('Gachthe1s Card Error:', error);
+    console.error('TheSieuRe Card Error:', error);
     return NextResponse.json({ message: 'Lỗi gửi thẻ' }, { status: 500 });
   }
 }
+
